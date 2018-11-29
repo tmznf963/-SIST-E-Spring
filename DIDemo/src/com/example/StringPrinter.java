@@ -5,8 +5,7 @@ public class StringPrinter implements Printer {
 
 	@Override
 	public void print(String message) {
-		// TODO Auto-generated method stub
-
+		this.buffer.append(message);
 	}
 
 	public String toString() {

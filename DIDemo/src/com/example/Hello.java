@@ -1,7 +1,7 @@
 package com.example;
 
-public class Hello {//ÂüÁ¶ ÇÏ´Â ¾Ö
-	private String name;
+public class Hello {//ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½
+	private String name; //propertyëŠ” setterë¥¼ ì´ìš©í•´ ê°’ì´ ë°›ì•„ì§„ë‹¤.
 	private Printer printer;
 	
 	public Hello() {}//Default Constructor
