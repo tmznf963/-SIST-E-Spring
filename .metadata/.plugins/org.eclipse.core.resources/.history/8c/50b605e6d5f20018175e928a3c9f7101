@@ -1,0 +1,15 @@
+package com.example;
+
+public class Proxy {
+	private int firstNum, secondNum;
+	public void setFirstNum(int firstNum) {
+		this.firstNum = firstNum;
+	}
+	public void setSecondNum(int secondNum) {
+		this.secondNum = secondNum;
+	}
+	public void addService() {}
+	public void subtractService() {}
+	public void multiplyService() {}
+	public void divideService() {}
+}

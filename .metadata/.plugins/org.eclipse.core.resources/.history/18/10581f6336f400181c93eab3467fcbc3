@@ -1,0 +1,10 @@
+package com.example;
+
+public class Sonata implements Car {
+
+	@Override
+	public void drive() {
+		
+	}
+	
+}

@@ -1,0 +1,20 @@
+package com.example;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class TestAPp {
+	private ApplicationContext ctx;
+	
+	@Before
+	public void init() {
+		this.ctx = new GenericXmlApplicationContext("classpath:applicationContext.xml");
+	}
+	
+	@Test
+	public void test() {
+		
+	}
+
+}

@@ -1,0 +1,9 @@
+package test;
+
+import org.junit.runner.RunWith;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:config/beans.xml")
+public class TestApp1 { // RunWith
+	
+}

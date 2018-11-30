@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="student2" class="com.example.Student" p:height="160.5" p:weight="55.4" ><!-- Namespaces [p] 체크 -->
+	<constructor-arg><value> 이미자</value></constructor-arg>
+	<constructor-arg><value> 44</value></constructor-arg>
+	<constructor-arg>
+		<list>
+			<value>운동</value>
+			<value>노래</value>
+			<value>요리</value>
+		</list>
+	</constructor-arg>
+</bean>
+</beans>

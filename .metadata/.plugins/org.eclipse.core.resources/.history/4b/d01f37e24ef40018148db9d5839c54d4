@@ -1,0 +1,12 @@
+package com.example;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class ApplicationConfig {
+	@Bean
+	public Student student1() {
+		Student student1 = new Student("한지민",24,hobbies);
+	}
+}

@@ -1,0 +1,21 @@
+package com.example;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class TestAPp {
+	private ApplicationContext ctx;
+	
+	@Before
+	public void init() {
+		this.ctx = new GenericXmlApplicationContext("classpath:applicationContext.xml");
+	}
+	
+	@Test
+	public void test() {
+		
+	}
+
+}

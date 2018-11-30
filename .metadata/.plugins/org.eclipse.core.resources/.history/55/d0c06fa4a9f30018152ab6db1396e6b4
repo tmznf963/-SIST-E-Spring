@@ -1,0 +1,15 @@
+package com.example;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class MainClass {
+	public static void main(String[] args) {
+//		Printer printer = new StringPrinter();
+//		Hello hello = new Hello("한지민",printer);
+//		hello.print();
+//		System.out.println(printer.toString());
+		ApplicationContext ctx = new GenericXmlApplicationContext("config/beans.xml");
+		Printer printer = new StringPrinter();
+	}
+}

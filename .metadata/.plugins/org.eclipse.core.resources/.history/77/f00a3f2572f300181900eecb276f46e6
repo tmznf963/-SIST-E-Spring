@@ -1,0 +1,11 @@
+package com.example;
+
+public class MainClass {
+	public static void main(String[] args) {
+		Printer printer = new StringPrinter();
+		Hello hello = new Hello();
+		hello.setName("한지민");
+		hello.setPrinter(printer);
+		System.out.println(printer.toString());
+	}
+}

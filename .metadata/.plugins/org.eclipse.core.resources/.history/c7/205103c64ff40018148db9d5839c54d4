@@ -1,0 +1,15 @@
+package com.example;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+
+public class TestApp {
+	private ApplicationContext ctx;
+	@Test
+	public void test() {
+		fail("Not yet implemented");
+	}
+
+}

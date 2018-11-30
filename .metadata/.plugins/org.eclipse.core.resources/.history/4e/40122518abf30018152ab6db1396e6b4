@@ -1,0 +1,18 @@
+package com.example;
+
+public class StudentInfo {
+	private Student studnet;
+
+	public StudentInfo(Student studnet) {
+		this.studnet = studnet;
+	}
+
+	public Student getStudnet() {
+		return studnet;
+	}
+
+	public void setStudnet(Student studnet) {
+		this.studnet = studnet;
+	}
+	
+}

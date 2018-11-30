@@ -1,0 +1,27 @@
+package com.example;
+
+import java.util.ArrayList;
+
+public class MyInfo {
+	private String name;
+	private double height;
+	private double weight;
+	private ArrayList<String> hobby;
+	private BmiCalculator bmiCalculator;
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	public void setHeight(double height) {
+		this.height = height;
+	}
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+	public void setHobby(ArrayList<String> hobby) {
+		this.hobby = hobby;
+	}
+	public void setBmiCalculator(BmiCalculator bmiCalculator) {
+		this.bmiCalculator = bmiCalculator;
+	}
+}

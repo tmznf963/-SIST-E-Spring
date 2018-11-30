@@ -1,0 +1,9 @@
+package com.example;
+
+public class MainClass {
+	public static void main(String[] args) {
+		Proxy proxy = new Proxy();
+		Calculator calc = new Calculator();
+		proxy.setCalculator(calc);
+	}
+}

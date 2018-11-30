@@ -1,0 +1,8 @@
+package com.example;
+
+public class HybridSonata extends Sonata implements Car{
+	@Override
+	public void drive() {
+		
+	}
+}

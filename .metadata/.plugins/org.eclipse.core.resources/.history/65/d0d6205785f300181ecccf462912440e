@@ -1,0 +1,13 @@
+package com.example;
+
+public class MainClass {
+	public static void main(String[] args) {
+		Printer c_printer = new ConsolePrinter();
+		c_printer.print("Hello, World");
+		
+		Printer s_printer = new StringPrinter();
+		s_printer.print("Hello World");
+		s_printer.print("Good Morning");
+		s_printer.print("Spring Framwork");
+	}
+}

@@ -1,0 +1,16 @@
+package com.example;
+
+import org.junit.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+//Maven --> update project
+public class TestApp {
+	private AnnotationConfigApplicationContext ctx;
+	
+	
+	@Test
+	public void test() {
+		
+	}
+
+}

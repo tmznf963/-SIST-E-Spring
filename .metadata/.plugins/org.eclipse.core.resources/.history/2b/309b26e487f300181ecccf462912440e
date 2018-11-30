@@ -1,0 +1,19 @@
+package com.example.test;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class HelloBeanTest {
+	private ApplicationContext ctx;
+	@Before
+	public void init() {
+		this.ctx = new GenericXmlApplicationContext("config/beans.xml");
+	}
+	@Test
+	public void test() {
+		assertNotNull(this.ctx);//null이 아니면 true
+	}
+
+}

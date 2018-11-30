@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="student" class="com.example.Student">
+	<constructor-arg> <value>한지민</value></constructor-arg>
+	<constructor-arg> <value>24</value></constructor-arg>
+	<constructor-arg> 
+		<list>
+			<value>등산</value>
+			<value>수영</value>
+			<value>독서</value>
+		</list>
+	</constructor-arg> <!-- Constructor -->
+	<property name="height" value="160.5"></property><!-- Setter -->
+	<property name="weight" value="50.5"></property>
+</bean>
+
+<bean id="student2" class="com.example.Student">
+	<constructor-arg value="이미자"/>
+	<constructor-arg value="55"/>
+	<constructor-arg>
+		<list>
+			<vlaue>영화감상</vlaue>
+			<vlaue>낚시</vlaue>
+			<vlaue>등산</vlaue>
+		</list>
+	</constructor-arg>
+	<property name="height" value="180"/>
+	<property name="weight" value="180"/>
+</bean>
+</beans>

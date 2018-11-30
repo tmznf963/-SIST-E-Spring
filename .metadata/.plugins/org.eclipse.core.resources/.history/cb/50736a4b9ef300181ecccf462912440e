@@ -1,0 +1,9 @@
+package com.example;
+
+public class MyInfo {
+	private String name;
+	private double height;
+	private double weight;
+	private ArrayList<String> hobby;
+	private BmiCalculator bmiCalculator;
+}

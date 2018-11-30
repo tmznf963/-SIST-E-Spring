@@ -1,0 +1,20 @@
+package test;
+
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:config/beans.xml")
+public class TestApp {
+	@Autowired
+	private GenericXmlApplicationContext ctx;
+	
+	@Test
+	public void test() {
+		assertNotNull(this.ctx);
+	}
+
+}

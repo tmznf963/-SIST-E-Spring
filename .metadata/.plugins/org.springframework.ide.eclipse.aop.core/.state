@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aop-reference-model>
+<aop-project name="DIDemo2"/>
+<aop-project name="SpringDemo"/>
+<aop-project name="SpringDemo3"/>
+<aop-project name="SpringDemo1"/>
+<aop-project name="SpringStart"/>
+<aop-project name="HelloWorld"/>
+<aop-project name="DIDemo1"/>
+<aop-project name="DIDemo3"/>
+<aop-project name="DIDemo5"/>
+<aop-project name="DIDemo"/>
+<aop-project name="SpringDemo2"/>
+<aop-project name="SpringDemo4"/>
+<aop-project name="SpringLifecycle"/>
+</aop-reference-model>

@@ -1,0 +1,11 @@
+package com.example;
+
+public class Carnival extends Car implements Car {
+
+	@Override
+	public void drive() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

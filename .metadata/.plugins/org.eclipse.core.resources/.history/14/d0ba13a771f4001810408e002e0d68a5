@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="student1" class="com.example.Student">
+		<constructor-arg><value>한지민</value></constructor-arg>
+		<constructor-arg><value>34</value></constructor-arg>
+		<constructor-arg><value>01098765432</value></constructor-arg>
+	</bean>
+	<bean id="student2" class="com.example.Student">
+	<constructor-arg><value>이미자</value></constructor-arg>
+	<constructor-arg><value>56</value></constructor-arg>
+	<constructor-arg><value>01038476331</value></constructor-arg>
+	</bean>
+</beans>

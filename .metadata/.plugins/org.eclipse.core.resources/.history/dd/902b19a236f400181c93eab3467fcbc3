@@ -1,0 +1,8 @@
+package com.example;
+
+public class MainClass {
+	Car car = new Sonata();
+	car.drive();
+	car = new HybridSonata();
+	car.drive();
+}

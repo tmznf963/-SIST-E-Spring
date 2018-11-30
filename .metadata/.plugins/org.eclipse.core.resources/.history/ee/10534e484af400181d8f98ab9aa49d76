@@ -1,0 +1,32 @@
+package com.example;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class TestApp {
+	private ApplicationContext ctx;
+	@Before
+	public void init() {
+		this.ctx = new GenericXmlApplicationContext("classpath:applicationContext.xml");
+	}
+	
+	@Test
+	public void test() {
+		assertNotNull(this.ctx);//null이 아니면 true
+	}
+	@Test
+	public void test1() {
+		Student student1 = (Student)this.ctx.getBean("student1");
+		//System.out.println(student1);
+		Student student2 = this.ctx.getBean("student2",Student.class);
+		assertNotSame(student1,student2);
+	}
+
+}

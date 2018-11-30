@@ -1,0 +1,10 @@
+package com.example;
+
+public class MainClass {
+	public static void main(String[] args) {		
+	Car car = new Sonata();
+	car.drive();
+	car = new HybridSonata();
+	car.drive();
+	}
+}

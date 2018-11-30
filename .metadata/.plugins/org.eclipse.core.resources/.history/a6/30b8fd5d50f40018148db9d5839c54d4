@@ -1,0 +1,21 @@
+package com.example;
+
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+//Maven --> update project
+public class TestApp {
+	private AnnotationConfigApplicationContext ctx;
+	
+	@Before
+	public void init() {
+		this.ctx = new AnnotationConfigApplicationContext(ApplicationContext.xml);
+	}
+	@Test
+	public void test() {
+		assertNotNull(this.ctx);
+	}
+
+}

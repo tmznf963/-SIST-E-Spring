@@ -1,0 +1,12 @@
+package com.example;
+
+import org.springframework.context.support.AbstractXmlApplicationContext;
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class MainClass {
+	public static void main(String[] args) {
+		String configXml = "classpath:applicationContext.xml";
+		 AbstractXmlApplicationContext ctx = 
+				 new GenericXmlApplicationContext(configXml);
+	}
+}

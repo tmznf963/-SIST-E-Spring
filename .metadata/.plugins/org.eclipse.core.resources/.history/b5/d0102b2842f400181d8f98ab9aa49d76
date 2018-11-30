@@ -1,0 +1,16 @@
+package com.example;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+//어노테이션을 이용한 주입
+@Configuration
+public class ApplicationConfig1 {
+	@Bean
+	private Sutdent student1() {
+		ArrayList<String> bobbies new ArrayList<String>(5);
+		
+		Student student1 = new Student("한지민",24,hobbie);
+		return sonata;
+	}
+}
