@@ -1,0 +1,15 @@
+import javax.sql.DataSource;
+
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class MainClass {
+	public static void main(String[] args) {
+		GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
+		DataSource ds = null;
+		try {
+			ds =
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+}

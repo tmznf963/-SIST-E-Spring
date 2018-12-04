@@ -1,0 +1,11 @@
+package com.example;
+
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class MainClass1 {
+	public static void main(String[] args) {
+		AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(ApplicationConfig.class);
+		AdminConnection adminConnection = ctx.getBean("adminConnection",AdminConnection.class);
+		System.out.println(adminConnection);
+	}
+}

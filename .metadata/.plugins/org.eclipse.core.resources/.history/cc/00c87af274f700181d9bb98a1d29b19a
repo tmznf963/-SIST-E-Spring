@@ -1,0 +1,30 @@
+package com.example;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import javax.sql.DataSource;
+
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class MainClass {
+	public static void main(String[] args) {
+// 	SimpleDriverDataSource sdds = new SimpleDriverDataSource();
+		GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
+		ctx.load("classpath:applicationContext.xml");
+		ctx.refresh();
+		try {
+			DataSource dataSource = (DataSource)ctx.getBean("dataSource");//xml에 있는 id값
+			Connection conn = dataSource.getConnection();
+			Statement stmt = conn.createStatement();
+			String sql = "SELECT NOW()";
+			ResultSet rs = stmt.executeQuery(sql);
+			System.out.println(dataSource);
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		
+		ctx.close();
+	}
+}

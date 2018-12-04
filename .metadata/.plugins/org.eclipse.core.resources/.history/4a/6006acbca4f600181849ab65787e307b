@@ -1,0 +1,8 @@
+package com.example;
+
+public class MyDataSource {
+	private String driverClass;
+	private String url;
+	private String username;
+	private String password;
+}

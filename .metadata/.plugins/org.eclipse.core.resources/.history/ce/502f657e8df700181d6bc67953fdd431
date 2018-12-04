@@ -1,0 +1,8 @@
+package com.oracle.vo;
+
+public class UserVO {
+	private String userid;
+	private String name;
+	private String gender;
+	private String city;
+}

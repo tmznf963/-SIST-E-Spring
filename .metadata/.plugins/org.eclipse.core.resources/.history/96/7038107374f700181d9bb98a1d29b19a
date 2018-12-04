@@ -1,0 +1,18 @@
+package com.example;
+
+import javax.sql.DataSource;
+
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class MainClass {
+	public static void main(String[] args) {
+// 	SimpleDriverDataSource sdds = new SimpleDriverDataSource();
+		GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
+		ctx.load("classpath:applicationContext.xml");
+		ctx.refresh();
+		
+		DataSource dataSource = (DataSource)ctx.getBean("dataSource");//xml에 있는 id값
+		
+		ctx.close();
+	}
+}

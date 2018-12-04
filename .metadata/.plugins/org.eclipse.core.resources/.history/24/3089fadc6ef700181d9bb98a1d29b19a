@@ -1,0 +1,4 @@
+db.driverClass=org.mariadb.jdbc.Driver
+db.url=org.mariadb://192.168.56.4:3306/world
+db.user=root
+db.password=root

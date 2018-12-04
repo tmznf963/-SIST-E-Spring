@@ -1,0 +1,12 @@
+package com.example;
+
+import java.util.Scanner;
+
+public class MainClass {
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("1: Oracle");
+		System.out.println("2: MariaDB");
+		System.out.println("어떤 Database를 사용하시겠습니가?");
+	}
+}

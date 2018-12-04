@@ -1,0 +1,13 @@
+package com.example;
+
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class MainClass {
+	public static void main(String[] args) {
+		 GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
+		 ctx.load("classpath:applicationContext.xml");//이때 컨테이너이 만들어짐
+		 ctx.refresh();
+		 Student student = ctx.getBean("student",Student.class);
+		 System.out.println(student);
+	}
+}

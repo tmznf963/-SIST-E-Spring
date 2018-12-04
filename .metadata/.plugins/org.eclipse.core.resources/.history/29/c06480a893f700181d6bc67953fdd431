@@ -1,0 +1,23 @@
+import java.sql.Connection;
+
+import javax.sql.DataSource;
+
+import org.springframework.context.support.GenericXmlApplicationContext;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+
+public class MainClass {
+	public static void main(String[] args) {
+		GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
+		ctx.load("classpath:applicationContext.xml");
+		ctx.refresh();
+		DataSource ds = null;
+		Connection conn = null;
+		try {
+			ds = ctx.getBean("dataSource",SimpleDriverDataSource.class);
+			conn = ds.getConnection();
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+		ctx.close();
+	}
+}

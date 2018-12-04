@@ -1,0 +1,28 @@
+package com.example;
+
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.EnvironmentAware;
+import org.springframework.core.env.Environment;
+
+public class AdminConnection implements EnvironmentAware, InitializingBean, DisposableBean{
+	private Environment env; //setter로 들어오는 값
+	 private String adminId;
+	 private String adminPasswd;
+	
+	 @Override
+	public void destroy() throws Exception {
+		
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		
+	}
+
+	@Override
+	public void setEnvironment(Environment environment) {
+		
+	}
+	
+}

@@ -1,0 +1,32 @@
+package com.example;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class ApplicationConfig {
+	private String  adminId;
+	private String  adminPasswd;
+	private String  subAdminId;
+	private String  subAdminPasswd;
+	
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer Properties(){
+		PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+		Resource [] locations = new Resource[2];
+		locations[0] = new ClassPathResource("primary.properties");
+		locations[1] = new ClassPathResource("secondary.properties");
+		configurer.setLocations(locations);
+		return configurer;
+	}
+	
+	@Bean
+	public AdminConnection adminConnection() {
+		AdminConnection adminConnection = new AdminConnection();
+		adminConnection.setAdminId(adminId);
+		adminConnection.setAdminPasswd(adminPasswd);
+		adminConnection.setSubAdminId(subAdminId);
+		adminConnection.setSubAdminPasswd(subAdminPasswd);
+		return adminConnection;
+	}
+}

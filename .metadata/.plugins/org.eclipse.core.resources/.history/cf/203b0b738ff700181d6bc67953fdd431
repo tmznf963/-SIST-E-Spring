@@ -1,0 +1,12 @@
+import javax.sql.DataSource;
+
+public class MainClass {
+	public static void main(String[] args) {
+		DataSource ds = null;
+		try {
+			ds =
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+}

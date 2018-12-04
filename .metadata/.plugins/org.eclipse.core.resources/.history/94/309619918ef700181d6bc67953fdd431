@@ -1,0 +1,9 @@
+package com.example.dao;
+
+public interface UserDAO {
+	void create();
+	UserVO read(String userid);
+	List<UserVO> readAll();
+	void update(String userid);
+	void delete(String userid);
+}

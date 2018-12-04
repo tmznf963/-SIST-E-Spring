@@ -1,0 +1,5 @@
+package com.oracle.vo;
+
+public class UserVO {
+
+}

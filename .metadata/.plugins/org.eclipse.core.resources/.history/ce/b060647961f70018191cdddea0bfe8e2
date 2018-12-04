@@ -1,0 +1,23 @@
+package com.example;
+
+import java.util.Scanner;
+
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class MainClass {
+	public static void main(String[] args) {
+		String choice = selectDB();
+		GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
+		ctx.getEnvironment().setActiveProfiles();
+		ServerInfo serverInfo = ctx.getBean("serverInfo",ServerInfo.class);
+		System.out.println(serverInfo);
+		ctx.close();
+	}
+	public static String selectDB() {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("1: Oracle");
+		System.out.println("2: MariaDB");
+		System.out.println("어떤 Database를 사용하시겠습니가?");
+		return scan.next();//== nextline
+	}
+}

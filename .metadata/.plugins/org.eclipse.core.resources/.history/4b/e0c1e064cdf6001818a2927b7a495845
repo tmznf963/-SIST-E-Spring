@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<!-- Properties file 값 사용 -->
+<context:property-placeholder location="classpath:primary.properties, classpath:secondary.properties" />
+<!--  ${치환자} 사용 -->
+
+
+<!-- Annotation 사용 -->
+<context:component-scan base-package="comexample"/>
+
+<!-- <bean id="adminConnection" class="com.example.AdminConnection"> -->
+<!-- 	<property name="adminId" value="${admin.id}"/> -->
+<!-- 	<property name="adminPasswd" value="${admin.pwd}"/> -->
+<!-- 	<property name="subAdminId" value="${sub.admin.id}"/> -->
+<!-- 	<property name="subAdminPasswd" value="${sub.admin.pwd}"/> -->
+<!-- </bean> -->
+</beans>

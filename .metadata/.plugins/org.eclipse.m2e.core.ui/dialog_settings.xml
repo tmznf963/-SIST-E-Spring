@@ -44,6 +44,8 @@
 	</section>
 	<section name="wizardPage">
 		<list key="groupId">
+			<item value="SpringJDBCdemo"/>
+			<item value="PropertyDemo1"/>
 			<item value="DIDemo5"/>
 			<item value="DIDemo2"/>
 			<item value="DIDemo1"/>
@@ -54,6 +56,8 @@
 		<list key="name">
 		</list>
 		<list key="artifactId">
+			<item value="SpringJDBCdemo"/>
+			<item value="PropertyDemo1"/>
 			<item value="DIDemo5"/>
 			<item value="DIDemo2"/>
 			<item value="DIDemo1"/>

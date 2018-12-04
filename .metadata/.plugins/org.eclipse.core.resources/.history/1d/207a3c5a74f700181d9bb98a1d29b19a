@@ -1,0 +1,16 @@
+package com.example;
+
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+
+public class MainClass {
+	public static void main(String[] args) {
+// 		SimpleDriverDataSource sdds = new SimpleDriverDataSource();
+//		GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
+//		ctx.load("classpath:applicationContext.xml");
+//		ctx.refresh();
+//		
+//		ServerInfo serverInfo = ctx.getBean("serverInfo",ServerInfo.class);
+//		System.out.println(serverInfo);
+//		ctx.close();
+	}
+}

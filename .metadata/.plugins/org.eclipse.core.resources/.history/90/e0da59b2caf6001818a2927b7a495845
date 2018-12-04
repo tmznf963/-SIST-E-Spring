@@ -1,0 +1,8 @@
+package com.example;
+
+public class AdminConnection {
+	private String adminId;
+	private String adminPasswd;
+	private String subAdminId;
+	private String subAdminPasswd;
+}

@@ -1,0 +1,17 @@
+import javax.sql.DataSource;
+
+import org.springframework.context.support.GenericXmlApplicationContext;
+
+public class MainClass {
+	public static void main(String[] args) {
+		GenericXmlApplicationContext ctx = new GenericXmlApplicationContext();
+		ctx.load("classpath:applicationContext.xml");
+		ctx.refresh();
+		DataSource ds = null;
+		try {
+			ds = ctx.getBean("dataSource",SimpleDriverDataSource.class);
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+}

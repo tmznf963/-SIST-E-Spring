@@ -1,0 +1,8 @@
+package com.example.dao;
+
+public interface UserDAO {
+	void create();
+	read();
+	void update();
+	void delete();
+}

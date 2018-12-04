@@ -1,0 +1,45 @@
+package com.example.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.dao.UserDAO;
+import com.oracle.vo.UserVO;
+
+@Service("userService")
+public class UserServiceImpl implements UserService {
+
+	@Autowired
+	UserDAO userDAO;
+	
+	@Override
+	public void createUser(UserVO userVO) {
+		this.userDAO.create(userVO);
+	}
+
+	@Override
+	public UserVO readUser(String userid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<UserVO> selectAllUsers() {
+		return this.userDAO.readAll();
+	}
+
+	@Override
+	public void updateUser(String userid) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteUser(String userid) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

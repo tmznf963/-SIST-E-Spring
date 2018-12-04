@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	profile="oracle">
+
+	<bean id="serverInfo" class="com.example.ServerInfo">
+		<property name="driverClass" value="org.mariadb.jdbc.Driver"/>
+		<property name="url" value="org.mariadb://192.168.56.4:3306/world"/>
+		<property name="user" value="root"/>
+		<property name="password" value="root"/>
+	</bean>
+</beans>

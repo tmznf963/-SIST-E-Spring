@@ -1,0 +1,11 @@
+package com.example.service;
+
+//void == return 안하는 애들
+public interface UserService {
+	void createUser();
+	UserVO readUser();
+	List<UserVO> selectAllUsers();
+	void updateUser();
+	void deleteUser();
+	
+}
