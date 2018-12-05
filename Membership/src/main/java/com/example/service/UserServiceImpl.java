@@ -21,8 +21,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserVO readUser(String userid) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.userDAO.read(userid);
 	}
 
 	@Override
@@ -31,9 +30,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void updateUser(String userid) {
-		// TODO Auto-generated method stub
-
+	public void updateUser(String userid, String city) {
+		this.userDAO.update(userid, city);
 	}
 
 	@Override

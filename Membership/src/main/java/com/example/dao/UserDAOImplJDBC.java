@@ -38,7 +38,7 @@ public class UserDAOImplJDBC implements UserDAO{
 			pstmt.setString(4, userVO.getCity());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		}finally {
 			try {
 				if(pstmt != null) pstmt.close();
@@ -49,8 +49,34 @@ public class UserDAOImplJDBC implements UserDAO{
 
 	@Override
 	public UserVO read(String userid) {
-		// TODO Auto-generated method stub
-		return null;
+		UserVO userVO = new UserVO();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = this.dataSource.getConnection();
+			String sql = "SELECT * FROM users WHERE userid = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userid);
+			rs = pstmt.executeQuery();
+			
+			if(!rs.next()) userVO = null;
+			else {//찾았다면
+				userVO.setUserid(userid);
+				userVO.setName(rs.getString("name"));
+				userVO.setGender(rs.getString("gender"));
+				userVO.setCity(rs.getString("city"));
+			}
+		}catch (SQLException e) {
+			System.out.println(e);
+		}finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			}catch(SQLException ex) {}
+		}
+		return userVO;
 	}
 
 	@Override
@@ -80,9 +106,25 @@ public class UserDAOImplJDBC implements UserDAO{
 	}
 
 	@Override
-	public void update(String userid) {
-		// TODO Auto-generated method stub
-		
+	public void update(String userid, String city) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = this.dataSource.getConnection();
+			String sql = "UPDATE users SET city = ? WHERE userid = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, city);
+			pstmt.setString(2, userid);
+			pstmt.executeUpdate();
+		}catch(SQLException e) {
+			System.out.println(e);
+		}finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+				
+			}catch(SQLException e) {}
+		}
 	}
 
 	@Override

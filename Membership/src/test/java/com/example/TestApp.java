@@ -16,12 +16,11 @@ import com.oracle.vo.UserVO;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:applicationContext.xml")
 public class TestApp {
-	@Autowired
-	private ApplicationContext ctx;
+
 	@Autowired
 	private UserService userService;
 	
-	@Test @Ignore
+	@Test 
 	public void test1() {
 		for(UserVO uservo : this.userService.selectAllUsers()) {
 			System.out.println(uservo);
@@ -38,12 +37,33 @@ public class TestApp {
 		UserVO userVO = new UserVO(userid,name,gender,city);
 		this.userService.createUser(userVO);
 	}
-	@Test
-	public void test_delete() {
+	@Test @Ignore
+	public void test2() {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Delete userid : ");
 		String userid = scan.next();
 		this.userService.deleteUser(userid);
 	}
-
+	
+	@Test @Ignore
+	public void test3() {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter userid to update: ");
+		String userid = scan.next();
+		System.out.println("City : ");
+		String city = scan.next();
+		
+		this.userService.updateUser(userid, city);
+		this.test1();
+	}
+	
+	@Test
+	public void test4() {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter Search userid : ");
+		String userid = scan.next();
+		
+		UserVO userVO = this.userService.readUser(userid);
+		System.out.println(userVO);
+	}
 }

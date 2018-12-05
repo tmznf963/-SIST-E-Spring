@@ -9,7 +9,7 @@ public interface UserService {
 	void createUser(UserVO userVO);
 	UserVO readUser(String userid);
 	List<UserVO> selectAllUsers();
-	void updateUser(String userid);
+	void updateUser(String userid, String city);
 	void deleteUser(String userid);
 	
 }

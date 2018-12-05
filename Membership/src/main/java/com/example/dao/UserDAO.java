@@ -8,6 +8,6 @@ public interface UserDAO {
 	void create(UserVO userVO);
 	UserVO read(String userid);
 	List<UserVO> readAll();
-	void update(String userid);
+	void update(String userid, String city);
 	void delete(String userid);
 }
