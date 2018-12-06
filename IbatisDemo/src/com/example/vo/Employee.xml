@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Employee">
+<typeAlias alias="emp" type="com.example.vo.Employee"/>
+	<!-- DAO에서 호출할 ID     ${} -> ##  -->
+	<insert id="insert" parameterClass="emp"><!-- 쟤 java -> xml -->
+		INSERT INTO Employee(first_name, last_name, salary)
+		VALUES(#first_name#, #last_name#, #salary#)
+	</insert>
+	
+	<select id="getAll" resultClass="emp"><!-- xml -> java -->
+		SELECT * FROM Employee
+	</select>
+	
+	<update id="update" parameterClass="emp">
+		UPDATE Employee
+		SET first_name = #first_name#, last_name = #last_name#, salary = #salary#
+		WHERE id = #id#
+	</update>
+	
+	<delete id="delete" parameterClass="int">
+		DELETE FROM Employee
+		WHERE id = #id#
+	</delete>
+</sqlMap>
