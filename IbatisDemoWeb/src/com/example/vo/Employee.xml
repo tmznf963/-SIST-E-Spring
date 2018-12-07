@@ -14,6 +14,9 @@ PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
 	<select id="getAll" resultClass="emp"><!-- xml -> java -->
 		SELECT * FROM Employee
 	</select>
+	<select id="getOne" resultClass="emp" parameterClass="int"><!-- xml -> java -->
+		SELECT * FROM Employee WHERE id = #id#
+	</select>
 	
 	<update id="update" parameterClass="emp">
 		UPDATE Employee

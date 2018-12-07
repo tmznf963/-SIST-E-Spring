@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+		"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+		
+<sqlMap namespace="Users">
+	<typeAlias alias="user" type="com.example.vo.UserVO"/>
+	<!-- DAO에서 호출할 ID     ${} -> ##  -->
+	<select id="readAll" resultClass="user"><!-- xml -> java 넘어간다-->
+		SELECT * FROM Users
+	</select>
+	
+	<select id="readOne" resultClass="user" parameterClass="String">
+		SELECT * FROM Users WHERE userid = #userid#
+	</select>
+	
+	<insert id="insert" parameterClass="user">
+		INSERT INTO Users VALUES(#userid#,#name#,#gender#,#city#)
+	</insert>
+	
+	<update id="update" parameterClass="user">
+		UPDATE Users SET city = #city# WHERE userid = #userid#
+	</update>
+	<delete id="delete" parameterClass="String">
+		DELETE FROM Users WHERE userid = #userid#
+	</delete>
+</sqlMap>
