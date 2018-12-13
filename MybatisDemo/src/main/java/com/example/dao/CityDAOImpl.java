@@ -23,12 +23,12 @@ public class CityDAOImpl implements CityDAO {
 
 	@Override
 	public CityVO read(String name) {
-		return this.sqlSession.selectOne("City.selectOne",name);
+		return this.sqlSession.selectOne("City.selectOne",name);//하나의 값
 	}
 
 	@Override
 	public List<CityVO> readAll() {
-		return this.sqlSession.selectList("City.selectAll");//namespace.id
+		return this.sqlSession.selectList("City.selectAll");//namespace.id 여려개 값
 	}
 
 	@Override

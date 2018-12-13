@@ -16,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectAll" resultType="cityVO" resultMap="cityMap">
 		SELECT * FROM city ORDER BY id ASC;
 	</select>
+	<!-- parameter : java에서 넘어오는 값 , result : 자바로 넘기는 값 -->
 	<select id="selectOne" parameterType="String" resultType="cityVO" resultMap="cityMap">
 		SELECT * FROM city WHERE Name=#{name}
 	</select>
