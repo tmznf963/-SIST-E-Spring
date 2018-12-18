@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Welcome to EXAMPLE_SHOP</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+<script src="js/jquery.min.js"></script>
+<script>
+$(function(){
+	$.ajax({
+		url : "users",
+		type : "json",
+		method : "GET",
+		success : function(data){
+			var str = "";
+			var data = data.data;
+			//console.log(data); // {userid: "javaman", name: "한지민", age: 22, gender: "여성", city: "서울"}
+			for(var i = 0 ; i < data.length ; i++){
+				str += "<tr>" ;
+				str += "<td><a href='users/"+data[i].userid+"'>" + data[i].userid + "</a></td><td>"+ data[i].name+"</td>" +
+							"<td>"+ data[i].age+"</td><td>"+data[i].gender+"</td>" + 
+							"<td>"+ data[i].city+"</td>";
+				str += "</tr>";
+			}
+			$("#result").html(str);
+		},
+		error : function(err){
+			console.log("error 발생 : " + err);
+		}
+	});
+});
+</script>
+</head>
+<body>
+<h1>Member List</h1>
+<a href="register.html">Member Add</a>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>UserID</th><th>Name</th><th>Age</th><th>Gender</th><th>City</th>
+			</tr>
+		</thead>
+		<tbody id="result">
+		
+		</tbody>
+	</table>
+</body>
+</html>
