@@ -17,7 +17,7 @@ $(function(){
 			//console.log(data); // {userid: "javaman", name: "한지민", age: 22, gender: "여성", city: "서울"}
 			for(var i = 0 ; i < data.length ; i++){
 				str += "<tr>" ;
-				str += "<td><a href='users/"+data[i].userid+"'>" + data[i].userid + "</a></td><td>"+ data[i].name+"</td>" +
+				str += "<td><a href='view.html?userid="+data[i].userid+"'>" + data[i].userid + "</a></td><td>"+ data[i].name+"</td>" +
 							"<td>"+ data[i].age+"</td><td>"+data[i].gender+"</td>" + 
 							"<td>"+ data[i].city+"</td>";
 				str += "</tr>";

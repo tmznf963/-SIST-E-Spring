@@ -5,6 +5,7 @@
 		
 <mapper namespace="Member">
 
+								<!-- alias -->
 <resultMap type="MemberVO" id="MemberMap">
 	<result column="userid" property="userid" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	<result column="name" property="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
@@ -47,5 +48,27 @@
 <select id="selectOneSP" statementType="CALLABLE" parameterMap="paramOneMemberMap">
 	{ call sp_member_select_one(?,?) }
 </select>
+<!-- ========================================================================== -->
+
+<!-- ========================================================================== -->
+<parameterMap type="String" id="deleteMap">
+	<parameter property="userid" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+</parameterMap>
+
+<delete id="deleteSP" parameterMap="deleteMap">
+	{ call sp_member_delete(?)}
+</delete>
+<!-- ========================================================================== -->
+
+<!-- ========================================================================== -->
+<parameterMap type="memberVO" id="updateMap">
+	<parameter property="age" javaType="Integer" jdbcType="TINYINT" mode="IN"/>
+	<parameter property="gender" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	<parameter property="city" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	<parameter property="userid" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+</parameterMap>
+<update id="updateSP" parameterMap="updateMap">
+	{ call sp_member_update(?,?,?,?)}
+</update>
 <!-- ========================================================================== -->
 </mapper>

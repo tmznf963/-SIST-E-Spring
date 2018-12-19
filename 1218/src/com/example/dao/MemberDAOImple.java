@@ -31,14 +31,12 @@ public class MemberDAOImple implements MemberDAO {
 
 	@Override
 	public void update(MemberVO memberVO) {
-		// TODO Auto-generated method stub
-		
+		this.sqlSession.update("Member.updateSP",memberVO);
 	}
 
 	@Override
 	public void delete(String userid) {
-		// TODO Auto-generated method stub
-		
+		this.sqlSession.delete("Member.deleteSP",userid);
 	}
 	
 	

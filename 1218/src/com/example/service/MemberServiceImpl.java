@@ -32,12 +32,12 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public void updateMember(MemberVO memberVO) {
-		
+		this.memberDAO.update(memberVO);
 	}
 
 	@Override
 	public void deleteMember(String userid) {
-		
+		this.memberDAO.delete(userid);
 	}
 	
 	

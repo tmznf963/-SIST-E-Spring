@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>User Infomation</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"/>
+<script src="js/jquery.min.js"></script>
+<script>
+	var userid = null;
+	userid = location.search.substring(1).split("=")[1];//?userid=javaman
+	$(function(){
+		//consoloe.log(userid);
+		$.ajax({
+			url : "/1218/users/"+userid,
+			method: "GET",
+			dataType : "json",
+			success : function(data){
+				//console.log(data);
+				var data = data.data;
+				$("#username").text(data.name);
+				$("#userid").text(data.userid);
+				$("#age").val(data.age);
+				if(data.gender == "남성") $(".gender").eq(0).prop("checked","checked");
+				else $(".gender").eq(1).prop("checked","checked");
+				$("#city").val(data.city);
+			},
+			error : function(err){
+				console.log("err : " + err);
+			}
+		});
+		
+		$("#btnList").bind("click",function(){
+			location.replace("/1218");//server.xml 경로 --> index.html
+		});
+		
+		$("#btnDelete").bind("click",function(){
+			$.ajax({
+				url : "/1218/users/"+userid,
+				method :"DELETE",
+				dataType:"json",
+				success : function(data){
+					alert(userid+"님이 삭제 되었습니다.");
+					location.href="/1218";//server.xml 경로 --> index.html
+				},
+				error : function(err){
+					console.log("err : " + err);
+				}
+			});
+		});
+		
+	});//function
+	
+	function member_update(){
+		$.ajax({
+			url : "users",
+			method : "PUT",
+			dataType : "json",
+			contentType : 'application/json; charset=UTF-8', //json을 보낼 때 contentType 해줘야 한다.
+			data : JSON.stringify({
+				"userid" : $("#userid").text() ,
+				"age" :  $("#age").val(),
+				"gender" : $(".gender:checked").val() ,
+				"city" : $("#city").val()
+			}),
+			success : function(data){
+				alert(data.code);
+				location.replace("/1218");
+			},
+			error : function(err){
+				console.log("err :" +err);
+			}
+		});
+	}
+</script>
+</head>
+<body>
+	<h1><span id="username"></span>'s Infomation</h1>
+	<ul>
+		<li>ID : <span id="userid"></span></li>
+		<li>Age : <input type="text" id="age"></li>
+		<li>Gender : <input type="radio" value="남성" class="gender">남성 &nbsp;&nbsp;
+								<input type="radio" value="여성" class="gender">여성 </li>
+		<li>City : <input type="text" id="city"></li>
+	</ul>
+	<button id="btnList" class="btn btn-success">목록으로</button>&nbsp;
+	<button id="btnUpdate" class="btn btn-warning" onclick="member_update()">수정하기</button><!-- method : PUT -->
+	<button id="btnDelete" class="btn btn-danger">삭제하기</button><!-- method : DELETE -->
+</body>
+</html>

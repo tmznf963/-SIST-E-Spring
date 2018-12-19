@@ -20,6 +20,28 @@ public class MemberController {
 	@Autowired
 	MemberService memberService;
 	
+	//update
+	@RequestMapping(value="/users", method=RequestMethod.PUT)
+	@ResponseBody
+	public Map update(@RequestBody MemberVO memberVO) {
+		this.memberService.updateMember(memberVO);
+		Map<String, Object> map = new HashMap<String,Object>();
+		map.put("code","success");
+		map.put("data", memberVO);
+		return map;
+	}
+	
+	//delete
+	@RequestMapping(value="users/{userid}", method=RequestMethod.DELETE)
+	@ResponseBody
+	public Map delete(@PathVariable String userid) {
+		this.memberService.deleteMember(userid);
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("code", "success");
+		return map;//TDD 테스트주도개발 == postman 사용
+	}
+	
+	
 	//selectOne
 	@RequestMapping(value="users/{userid}", method=RequestMethod.GET)
 	@ResponseBody
@@ -34,7 +56,7 @@ public class MemberController {
 		Map<String, Object> re_map = new HashMap<String,Object>();
 		re_map.put("code","success");
 		re_map.put("data", memberVO);
-		System.out.println(re_map);
+		//System.out.println(re_map);
 		return re_map;
 	}
 	

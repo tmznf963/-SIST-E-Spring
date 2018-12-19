@@ -51,3 +51,29 @@ BEGIN
   FROM Member
   WHERE userid = p_userid;
 END;
+
+CREATE OR REPLACE PROCEDURE sp_member_delete
+(
+	p_userid IN Member.userid%TYPE
+)
+IS
+BEGIN
+	DELETE FROM MEMBER 
+  WHERE userid = p_userid;
+  COMMIT;
+END;
+
+CREATE OR REPLACE PROCEDURE sp_member_update
+(
+    v_age        IN     Member.age%TYPE,
+    v_gender     IN     Member.gender%TYPE,
+    v_city       IN     Member.city%TYPE,
+    v_userid     IN     Member.userid%TYPE
+)
+IS
+BEGIN
+    UPDATE Member 
+    SET age = v_age, gender = v_gender, city = v_city
+    WHERE userid = v_userid;
+    COMMIT;
+END;

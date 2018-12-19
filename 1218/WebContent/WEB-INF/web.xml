@@ -6,6 +6,7 @@
   </welcome-file-list>
   
   <!-- needed for ContextLoaderListener -->
+  <!-- 메모리에 올라올 때 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:applicationContext.xml</param-value>
@@ -17,12 +18,13 @@
 	</listener>
 	
 	<!-- The front controller of this Spring Web application, responsible for handling all application requests -->
+	<!-- 사용자가 요청할 때 -->
 	<servlet>
 		<servlet-name>springDispatcherServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>classpath:applicationContext*.xml</param-value>
+			<param-value>classpath:beans.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
