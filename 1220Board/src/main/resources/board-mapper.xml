@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">		
+<mapper namespace="Board">
+	
+	
+	<parameterMap type="boardVO" id="insertMap">
+		<parameter property="name" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="email" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="title" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="contents" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	</parameterMap>
+																		<!-- alias -->
+	<insert id="insertSP" parameterType="boardVO" parameterMap="insertMap">
+		{ call sp_board_insert(?,?,?,?)}
+	</insert>
+</mapper>

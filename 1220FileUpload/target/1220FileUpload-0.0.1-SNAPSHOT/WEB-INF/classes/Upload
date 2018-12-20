@@ -1,0 +1,4 @@
+1. Upload 방식  Form submit | Ajax
+2. File 이름 중복   yyyymmddms.jpg
+3. 저장경로   c:/upload
+4.	용량 및 갯수  10MB : 1024000
