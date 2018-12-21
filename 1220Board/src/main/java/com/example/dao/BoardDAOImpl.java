@@ -20,7 +20,7 @@ public class BoardDAOImpl implements BoardDAO {
 
 	@Override
 	public void update(BoardVO board) {
-
+		this.sqlSession.update("Board.updateSP",board);
 	}
 
 	@Override
@@ -30,22 +30,22 @@ public class BoardDAOImpl implements BoardDAO {
 
 	@Override
 	public void read(Map map) {
-
+		this.sqlSession.selectOne("Board.selectOneSP",map);
 	}
 
 	@Override
 	public void readAll(Map map) {
-
+		this.sqlSession.selectList("Board.selectAllSP",map);
 	}
 
 	@Override
 	public void getTotalCount(Map map) {
-
+		
 	}
 
 	@Override
 	public void delete(int idx) {
-
+		this.sqlSession.delete("Board.deleteSP",idx);
 	}
 
 }

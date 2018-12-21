@@ -9,8 +9,8 @@ public interface BoardService {
 	void updateBoard(BoardVO board);
 	void answerBoard(BoardVO board); //댓글
 
-	void selectBoard(Map map);
-	void select(Map map);
+	void selectBoard(Map map);//detail
+	void select(Map map);//list
 	void getTotalCount(Map map);//페이징
 	
 	void deleteBoard(int idx);

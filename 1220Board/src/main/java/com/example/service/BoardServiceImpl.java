@@ -15,12 +15,12 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Override
 	public void insertBoard(BoardVO board) {
-		this.boardDAO.create(board);
+		this.boardDAO.create(board);//row값 1 check
 	}
 
 	@Override
 	public void updateBoard(BoardVO board) {
-
+		this.boardDAO.update(board);
 	}
 
 	@Override
@@ -30,12 +30,12 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void selectBoard(Map map) {
-
+		this.boardDAO.read(map);
 	}
 
 	@Override
 	public void select(Map map) {
-
+		this.boardDAO.readAll(map);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void deleteBoard(int idx) {
-
+		this.boardDAO.delete(idx);
 	}
 
 }

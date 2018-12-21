@@ -15,7 +15,7 @@
 		 
 		 $("#btnSend").bind("click",function(){
 			 $.ajax({
-				 url : "board/write",
+				 url : "write",
 				 dataType : "json",  //받는 type
 				 method : "POST",
 				 contentType : "application/json; charset=UTF-8",	//보내는 Type
@@ -26,8 +26,10 @@
 					 "contents" : $("#Contents").val()
 				 }),
 				 success : function(data){
-					 alert(data.code);
-					 location.href="/"; // index.html   || welcome 파일 경로
+					 if(data.code){
+						 alert("Insert Success");
+						 location.href="/board"; // index.html   || welcome 파일 경로
+					 }else alert("Insert Failure. Try again.");
 				 },
 				 error : function(err){
 					 console.log("err 발생 : " + err);

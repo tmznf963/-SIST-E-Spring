@@ -1,0 +1,42 @@
+/* @charset "UTF-8";
+
+body {
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+#banner {
+	text-align: center;
+}
+
+#banner span {
+	font-size: 2em;
+}
+
+div:nth-of-type(2) table {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div:nth-of-type(2) table td:nth-of-type(1) {
+	text-align: left;
+}
+
+div:nth-of-type(2) table td:nth-of-type(2) {
+	text-align: right;
+}
+
+div:nth-of-type(3) table {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	border-collapse: collapse;
+}
+
+div:nth-of-type(3) table th {
+	height: 50px;
+	background-color: navy;
+	color: white;
+} */

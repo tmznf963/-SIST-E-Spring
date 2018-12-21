@@ -3,8 +3,42 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">		
 <mapper namespace="Board">
+
+<resultMap type="boardVO" id="selectResultMap">
+		<result column="idx" property="idx" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="name" property="name" jdbcType="VARCHAR" javaType="String"/>
+		<result column="email" property="email" jdbcType="VARCHAR" javaType="String"/>
+		<result column="title" property="title" jdbcType="VARCHAR" javaType="String"/>
+		<result column="contents" property="contents" jdbcType="VARCHAR" javaType="String"/>
+		<result column="writedate" property="writedate" jdbcType="DATE" javaType="String"/>
+		<result column="readnum" property="readnum" jdbcType="SMALLINT" javaType="Integer"/>
+		<result column="grp" property="grp" jdbcType="INTEGER" javaType="Integer"/>
+		<result column="lev" property="lev" jdbcType="TINYINT" javaType="Integer"/>
+		<result column="step" property="step" jdbcType="TINYINT" javaType="Integer"/>
+	</resultMap>
+
+<!-- ==================================================================== -->
+	<parameterMap type="boardVO" id="selectAllMap">
+		<parameter property="results" javaType="ResultSet" jdbcType="CURSOR" mode="OUT"  resultMap="selectResultMap"/>
+	</parameterMap>
 	
+	<select id="selectAllSP" parameterMap="selectAllMap" statementType="CALLABLE" parameterType="hashMap">
+		{  call sp_board_select_all(?)}
+	</select>
+<!-- ==================================================================== -->
+
+<!-- ==================================================================== -->
+<parameterMap type="boardVO" id="selectOneMap">
+	<parameter property="idx" javaType="Integer" jdbcType="INTEGER" mode="IN" />
+	<parameter property="result" javaType="ResultSet" jdbcType="CURSOR" mode="OUT"  resultMap="selectResultMap"/>
+</parameterMap>
+
+<select id="selectOneSP" parameterMap="selectOneMap" statementType="CALLABLE" parameterType="hashMap">
+	{ call sp_board_select_one(?,?)}
+</select>
+<!-- ==================================================================== -->
 	
+<!-- ==================================================================== -->
 	<parameterMap type="boardVO" id="insertMap">
 		<parameter property="name" javaType="String" jdbcType="VARCHAR" mode="IN"/>
 		<parameter property="email" javaType="String" jdbcType="VARCHAR" mode="IN"/>
@@ -15,4 +49,22 @@
 	<insert id="insertSP" parameterType="boardVO" parameterMap="insertMap">
 		{ call sp_board_insert(?,?,?,?)}
 	</insert>
+<!-- ==================================================================== -->
+
+<!-- ==================================================================== -->
+<parameterMap type="Integer" id="deleteMap">
+	<parameter property="idx" javaType="Integer" jdbcType="INTEGER" mode="IN"/>
+</parameterMap>
+<delete id="deleteSP" parameterMap="deleteMap" >
+	{ call sp_board_delete(?)}
+</delete>
+<!-- ==================================================================== -->
+
+<!-- ==================================================================== -->
+<!-- ${} 써주면 알아서 boardVO.getIdx() 값을 가져온다 -->
+<update id="updateSP" parameterType="boardVO">
+	{ call sp_board_update(#{idx},#{email},#{title},#{contents})
+</update>
+<!-- ==================================================================== -->
+
 </mapper>
