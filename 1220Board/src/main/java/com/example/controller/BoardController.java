@@ -28,40 +28,65 @@ public class BoardController {
 	public String home() {
 		return "index";
 	}
-	
-	//selectAll					첫 페이지
-	@RequestMapping(value = "/", method = RequestMethod.POST)
-	@ResponseBody		//나갈 때 object --> json
-	public Map list() {
-		Map<String,Object> map = new HashMap<String,Object>();
-		this.boardService.select(map);
-		List<BoardVO> list = (List<BoardVO>)map.get("results");//maaper의 peoperty값
-		Map<String,Object> data = new HashMap<String,Object>();
-		data.put("code", Boolean.TRUE);
-		data.put("data", list);
-		return data;
-	}
-	
-
-	//selectOne					         /board/3
-	@RequestMapping(value="/{idx}",method=RequestMethod.GET)
-	@ResponseBody					//나갈 때 object --> json
-	public ModelAndView read(@PathVariable int idx) {
-		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("idx", idx);//집어넣어
-		this.boardService.selectBoard(map);
-		List<BoardVO> list = (List<BoardVO>)map.get("result");
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("data",list.get(0));//반대쪽 jsp --> ${data}
-		mav.setViewName("view");// --> /static/view.jsp
-		return mav;
-	}
-	
 	//write.jsp로 이동
 	@RequestMapping(value = "/write", method = RequestMethod.GET)
 	public String write() {
 		return "write"; // webapp/static/write.jsp
 	}
+	
+	//selectAll					첫 페이지
+	@RequestMapping(value = "/{page}", method = RequestMethod.POST)
+	@ResponseBody		//나갈 때 object --> json
+	public Map list(@PathVariable int page) {//--> 현재페이지
+		Map<String,Object> countMap = new HashMap<String,Object>();
+		this.boardService.getTotalCount(countMap);
+		int totalCount = (Integer)countMap.get("result");
+		int pageSize = 10;
+		int totalPage = (totalCount%pageSize == 0) ? totalCount/pageSize : totalCount/pageSize +1; //전체페이지
+		if(totalPage < page) page = totalPage;
+		
+		int pageCount = 10; //한 페이지에 뿌릴 수 있는 갯수는 10개씩
+		
+		int start = (page-1) * pageCount +1;//시작페이지가 1일 때 ex)1
+		int end = start + pageCount -1;//끝페이지							ex)10
+		
+		int startPage = ((page - 1) * pageCount / pageCount) + 1;//2
+		int endPage = startPage + pageCount - 1;//11
+		if(endPage> totalPage) endPage = totalPage;
+		
+		Map<String, Object> results = new HashMap<String, Object>();//전체 레코드
+		results.put("start", start);
+		results.put("end", end);
+		this.boardService.select(results);//Map
+		List<BoardVO> list = (List<BoardVO>) results.get("results");//mapper의 property값
+		
+		Map<String,Object> map = new HashMap<String,Object>(); //사용자한테 전달할 Map
+		map.put("code", Boolean.TRUE);
+		map.put("startPage", startPage);
+		map.put("endPage", endPage);
+		map.put("totalPage", totalPage);
+		map.put("pageSize", pageSize);
+		map.put("page", page);
+		map.put("data", list);
+		return map;
+	}
+	
+
+	//selectOne					         /board/3page/2글번호
+	@RequestMapping(value="/{page}/{idx}",method=RequestMethod.GET)
+	@ResponseBody					//나갈 때 object --> json
+	public ModelAndView read(@PathVariable int page, @PathVariable int idx) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("idx", idx);//idx넣기
+		this.boardService.selectBoard(map);
+		List<BoardVO> list = (List<BoardVO>)map.get("result");
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("data",list.get(0));//반대쪽 jsp --> ${data}
+		mav.addObject("page", page);//							  ${page}
+		mav.setViewName("view");// --> /static/view.jsp
+		return mav;
+	}
+	
 	
 	//insert
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
@@ -121,5 +146,33 @@ public class BoardController {
 //			this.boardService.insertBoard(board);
 //		}
 //	}
+	
+	//답글 insert
+	@RequestMapping(value = "answer", method = RequestMethod.POST)
+	@ResponseBody
+	public Map answer(@RequestBody BoardVO board) {
+		board.setLev(board.getLev() + 1);
+		board.setStep(board.getStep() + 1);
+		this.boardService.answerBoard(board);
+		Map<String, Object> result = new HashMap<String, Object>();
+		result.put("code", Boolean.TRUE);
+		return result;
+	}
+	
+	////답글 페이지 이동
+	@RequestMapping(value="answer/{page}/{idx}",method=RequestMethod.GET)
+	@ResponseBody					//나갈 때 object --> json
+	public ModelAndView answer(@PathVariable int page, @PathVariable int idx) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("idx", idx);//idx넣기
+		this.boardService.selectBoard(map);
+		List<BoardVO> list = (List<BoardVO>)map.get("result");
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("data",list.get(0));//반대쪽 jsp --> <c:set var="board" value="${data}" />
+		mav.addObject("page", page);//							  ${page}
+		mav.setViewName("answer");// --> /static/answer.jsp
+		return mav;
+	}
+	
 	
 }

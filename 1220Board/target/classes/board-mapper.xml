@@ -4,7 +4,7 @@
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">		
 <mapper namespace="Board">
 
-<resultMap type="boardVO" id="selectResultMap">
+	<resultMap type="boardVO" id="selectResultMap">
 		<result column="idx" property="idx" jdbcType="INTEGER" javaType="Integer"/>
 		<result column="name" property="name" jdbcType="VARCHAR" javaType="String"/>
 		<result column="email" property="email" jdbcType="VARCHAR" javaType="String"/>
@@ -16,14 +16,44 @@
 		<result column="lev" property="lev" jdbcType="TINYINT" javaType="Integer"/>
 		<result column="step" property="step" jdbcType="TINYINT" javaType="Integer"/>
 	</resultMap>
+	
+<!-- ==================================================================== -->
+<parameterMap type="boardVO" id="answerMap">
+	<parameter property="name" mode="IN" />
+	<parameter property="email" mode="IN" />
+	<parameter property="title" mode="IN" />
+	<parameter property="contents" mode="IN" />
+	<parameter property="grp" mode="IN" />
+	<parameter property="lev" mode="IN" />
+	<parameter property="step" mode="IN" />
+</parameterMap>
+<insert id="answerInsertSP" parameterMap="answerMap">
+{ call sp_board_answer_insert(?,?,?,?,?,?,?) }
+</insert>
+
+<update id="answerUpdateSP" parameterType="hashMap">
+	{ call sp_board_answer_update(#{grp}, #{step}) }
+</update>
+<!-- ==================================================================== -->
 
 <!-- ==================================================================== -->
-	<parameterMap type="boardVO" id="selectAllMap">
+<parameterMap type="hashMap" id="selectCountMap">
+	<parameter property="result" javaType="Integer" jdbcType="INTEGER" mode="OUT"/>
+</parameterMap>
+<select id="selectTotalCountSP" parameterMap="selectCountMap" statementType="CALLABLE" parameterType="hashMap">
+	{ call sp_board_total_count(?)}
+</select>
+<!-- ==================================================================== -->
+
+<!-- ==================================================================== -->
+	<parameterMap type="hashMap" id="selectAllMap">
 		<parameter property="results" javaType="ResultSet" jdbcType="CURSOR" mode="OUT"  resultMap="selectResultMap"/>
+		<parameter property="start" javaType="Integer" jdbcType="INTEGER" mode="IN"/>
+		<parameter property="end" javaType="Integer" jdbcType="INTEGER" mode="IN"/>
 	</parameterMap>
 	
-	<select id="selectAllSP" parameterMap="selectAllMap" statementType="CALLABLE" parameterType="hashMap">
-		{  call sp_board_select_all(?)}
+	<select id="selectAllSP" parameterMap="selectAllMap" statementType="CALLABLE">
+		{  call sp_board_select_all(?,?,?)}
 	</select>
 <!-- ==================================================================== -->
 

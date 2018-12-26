@@ -1,5 +1,6 @@
 package com.example.dao;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -25,9 +26,17 @@ public class BoardDAOImpl implements BoardDAO {
 
 	@Override
 	public void answer(BoardVO board) {
-
+		this.answer_update(board.getGrp(), board.getStep());
+		this.sqlSession.insert("Board.answerInsertSP", board);
 	}
-
+	
+	private void answer_update(int grp, int step) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("grp", grp);
+		map.put("step", step);
+		this.sqlSession.update("Board.answerUpdateSP", map);//step증가
+	}
+	
 	@Override
 	public void read(Map map) {
 		this.sqlSession.selectOne("Board.selectOneSP",map);
@@ -40,7 +49,7 @@ public class BoardDAOImpl implements BoardDAO {
 
 	@Override
 	public void getTotalCount(Map map) {
-		
+		this.sqlSession.selectOne("Board.selectTotalCountSP",map);
 	}
 
 	@Override

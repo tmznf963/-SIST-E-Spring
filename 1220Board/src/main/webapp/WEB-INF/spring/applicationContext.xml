@@ -21,6 +21,7 @@
 	  <property name="mapperLocations">
 	  	<list>
 	  		<value>classpath:board-mapper.xml</value>
+	  		<value>classpath:reply-mapper.xml</value>
 	  	</list>
 	  </property>
 	</bean>

@@ -25,7 +25,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void answerBoard(BoardVO board) {
-
+		this.boardDAO.answer(board);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void getTotalCount(Map map) {
-
+		this.boardDAO.getTotalCount(map);
 	}
 
 	@Override
