@@ -1,0 +1,203 @@
+CREATE SEQUENCE product_idx_seq
+START WITH 1
+MAXVALUE 999999
+NOCYCLE;
+
+COMMIT;
+
+--DROP SEQUENCE product_idx_seq;
+
+--TRUNCATE TABLE Product;
+
+CREATE TABLE product
+(
+   idx               NUMBER(6),
+   sellerid            VARCHAR2(20)   NOT NULL,
+   pcode         VARCHAR2(20)   NOT NULL,
+   pname            VARCHAR2(20)   NOT NULL,
+   pcontents	VARCHAR2(2000) NOT NULL,
+   origin       VARCHAR2(50)   NOT NULL,
+	 unit      VARCHAR2(10)   NOT NULL,
+   filename       VARCHAR2(100)   NOT NULL,
+   category               VARCHAR2(20)   NOT NULL,
+   stock         NUMBER(5)   NOT NULL,
+   price      NUMBER(9)               NOT NULL,
+   sell_num      NUMBER(6)  DEFAULT 0,
+   recomm				NUMBER(1)	DEFAULT 0,
+   writedate        DATE   NOT NULL,
+   category2    VARCHAR2(20)   NOT NULL,
+   CONSTRAINT product_pcode_pk   PRIMARY KEY(pcode)
+);
+
+--상품코드 중복 검사
+CREATE OR REPLACE PROCEDURE FARM.PRODUCT_CHECK
+(
+	p_pcode          IN        product.pcode%TYPE,
+	product_record     OUT   SYS_REFCURSOR
+)
+AS
+BEGIN
+	OPEN product_record FOR
+	SELECT pcode
+	FROM product
+	WHERE pcode = p_pcode;
+END;
+
+--상품등록 insert
+CREATE OR REPLACE PROCEDURE FARM.PRODUCT_INSERT
+(
+	p_sellerid			IN			product.sellerid%TYPE,
+	p_pcode		IN			product.pcode%TYPE,
+	p_pname				IN			product.pname%TYPE,
+	p_pcontents				IN			product.pcontents%TYPE,
+	p_origin		IN			product.origin%TYPE,
+	p_unit		IN			product.unit%TYPE,
+	p_filename		IN			product.filename%TYPE,
+	p_category		IN			product.category%TYPE,
+  p_category2		IN			product.category2%TYPE,
+	p_stock		IN			product.stock%TYPE,
+	p_price		IN			product.price%TYPE
+)
+IS
+BEGIN
+	INSERT INTO Product(idx,sellerid,pcode,pname,pcontents,origin,unit,filename,category,stock,price,writedate,category2)
+	VALUES (product_idx_seq.NEXTVAL, p_sellerid, p_pcode, p_pname, p_pcontents, p_origin, p_unit, p_filename, p_category,p_stock,p_price,SYSDATE,p_category2);
+	COMMIT;
+END;
+
+--상품 하나 select
+CREATE OR REPLACE PROCEDURE FARM.PRODUCT_SELECT
+(
+	p_idx 					IN			product.idx%TYPE,
+	product_record			OUT		SYS_REFCURSOR
+)
+AS
+BEGIN
+	OPEN product_record FOR
+	SELECT * FROM Product
+	WHERE idx = p_idx;
+END;
+
+--상품 전체 select AS는 호칭붙여주기
+CREATE OR REPLACE procedure FARM.PRODUCT_SELECTALL
+(
+	p_sellerid					IN		product.sellerid%TYPE,
+  product_record 			OUT		 SYS_REFCURSOR,
+  v_start             IN          NUMBER,
+	v_end               IN          NUMBER
+)
+AS
+BEGIN
+   OPEN product_record FOR
+   SELECT B.idx, pcode, pname, filename, CATEGORY,category2, price, sell_num, writedate
+   FROM
+   	(SELECT rownum AS rnum, A.idx, A.pcode, A.pname, A.filename, A.CATEGORY, A.category2, A.price, A.sell_num, A.writedate
+   FROM
+		(SELECT idx, pcode, pname, filename, CATEGORY,category2, price, sell_num, writedate, sellerid
+			FROM product ORDER BY writedate DESC) A
+			WHERE rownum <= v_end AND sellerid = p_sellerid) B
+   WHERE B.rnum >= v_start;
+END;
+
+--page total count | INTO는 select값을 변수(컬럼)에 할당해준다
+CREATE OR REPLACE PROCEDURE product_seller_total_count
+(
+	v_sellerid IN		product.sellerid%TYPE,
+  v_count OUT Number
+)
+IS
+BEGIN
+	SELECT COUNT(*) INTO v_count
+  FROM Product
+  WHERE sellerid = v_sellerid;
+END;
+
+-------------------문의&댓글--------------------
+CREATE SEQUENCE seq_inquiry_idx
+MAXVALUE 999999
+
+CREATE TABLE inquiry
+(
+	idx NUMBER(6),
+	user_id VARCHAR2(20) NOT NULL,
+  pcode VARCHAR2(20) NOT NULL,
+	in_contents VARCHAR2(2000) NOT NULL,
+	in_writedate DATE DEFAULT SYSDATE,
+	CONSTRAINT reply_idx_pk PRIMARY KEY(idx),
+	CONSTRAINT reply_user_id_fk FOREIGN KEY(user_id) REFERENCES customer(user_id) ON DELETE CASCADE,
+  CONSTRAINT reply_pcode_fk FOREIGN KEY(pcode) REFERENCES product(pcode) ON DELETE CASCADE
+)
+
+--Inquiry insert
+CREATE OR REPLACE PROCEDURE sp_inquiry_insert
+(
+	v_user_id IN inquiry.user_id%TYPE,
+	v_pcode IN inquiry.pcode%TYPE,
+	v_in_contents IN inquiry.in_contents%TYPE
+)
+IS
+BEGIN
+	INSERT INTO inquiry (idx, user_id, pcode, in_contents)
+	VALUES (seq_inquiry_idx.NEXTVAL, v_user_id, v_pcode, v_in_contents);
+	COMMIT;
+END;
+
+--Inquiry select
+CREATE OR REPLACE PROCEDURE sp_inquiry_select
+(
+	v_pcode IN inquiry.pcode%TYPE,
+	rec_inquiry  OUT  SYS_REFCURSOR
+)
+AS
+BEGIN
+	OPEN rec_inquiry FOR
+  SELECT idx, user_id, pcode, in_contents, in_writedate
+  FROM inquiry
+  WHERE pcode = v_pcode
+  ORDER BY idx ASC;
+END;
+
+--Inquiry 삭제
+CREATE OR REPLACE PROCEDURE sp_inquiry_delete
+(
+	v_idx		IN   inquiry.idx%TYPE
+)
+IS
+BEGIN
+	DELETE FROM inquiry WHERE idx = v_idx;
+  COMMIT;
+END;
+
+--상품 삭제
+CREATE OR REPLACE PROCEDURE product_delete
+(
+	p_idx 	IN 		product.idx%TYPE
+)
+IS
+BEGIN
+	DELETE FROM product
+  WHERE idx = p_idx;
+  COMMIT;
+END;
+
+--상품 수정
+CREATE OR REPLACE PROCEDURE product_update
+(
+	p_idx 	IN 		product.idx%TYPE,
+  p_pname 	IN 		product.pname%TYPE,
+  p_pcontents	IN 		product.pcontents%TYPE,
+  p_origin 	IN 		product.origin%TYPE,
+  p_unit	IN 		product.unit%TYPE,
+  p_filename 	IN 		product.filename%TYPE,
+  p_category	IN 		product.category%TYPE,
+  p_stock 	IN 		product.stock%TYPE,
+  p_price 	IN 		product.price%TYPE,
+  p_category2 	IN 		product.category2%TYPE
+)
+IS
+BEGIN
+	UPDATE product
+  SET pname = p_pname, pcontents=p_pcontents , origin=p_origin , unit=p_unit , filename=p_filename , CATEGORY=p_category , stock=p_stock , price=p_price , writedate=SYSDATE , category2=p_category2
+  WHERE idx = p_idx;
+  COMMIT;
+END;

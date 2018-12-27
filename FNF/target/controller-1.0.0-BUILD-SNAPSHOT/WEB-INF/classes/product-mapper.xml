@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="Product">
+
+<!-- 
+int idx, stock, price, sell_num, recomm;
+시퀀스,재고,가격,판매수,추천상품상태
+String  pcode, sellerid, pname, pcontents, origin, unit, filename, category,category2;
+상품코드,판매자id,상품명,상품내용,원산지,단위,파일명,카테고리
+Date writedate 
+등록일
+-->
+<resultMap type="ProductVO" id="ProductResultMap">
+	<result property="idx" column="idx" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result property="stock" column="stock" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result property="price" column="price" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result property="sell_num" column="sell_num" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result property="recomm" column="recomm" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+	<result property="pcode" column="pcode" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result property="origin" column="origin" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result property="sellerid" column="sellerid" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result property="pname" column="pname" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result property="pcontents" column="pcontents" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result property="unit" column="unit" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result property="filename" column="filename" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result property="category" column="category" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result property="category2" column="category2" javaType="java.lang.String" jdbcType="VARCHAR"/>
+	<result property="writedate" column="writedate" javaType="String" jdbcType="DATE" />
+</resultMap>
+<!-- =======================================Insert========================================= -->
+	<insert id="insert" parameterType="ProductVO">
+		INSERT INTO Product(idx,sellerid,pcode,pname,pcontents,origin,unit,filename,category,stock,price,writedate,category2)
+		VALUES (product_idx_seq.NEXTVAL, #{sellerid}, #{pcode}, #{pname},  #{pcontents},  #{origin},  #{unit}, #{filename},  #{category}, #{stock}, #{price},SYSDATE, #{category2})
+	</insert>
+<!-- ================================================================================ -->
+
+<!-- =======================================InsertSP========================================= -->
+	<parameterMap type="ProductVO" id="insertMap">
+		<parameter property="sellerid" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="pcode" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="pname" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="pcontents" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="origin" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="unit" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="filename" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="category" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="category2" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="stock" javaType="Integer" jdbcType="INTEGER" mode="IN"/>
+		<parameter property="price" javaType="Integer" jdbcType="INTEGER" mode="IN"/>
+	</parameterMap>
+	<insert id="insertSP" parameterType="ProductVO" parameterMap="insertMap">
+		{ call product_insert(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }
+	</insert>
+<!-- ================================================================================ -->
+
+<!-- ========================================selectAll======================================== -->
+	<parameterMap type="ProductVO" id="selectAllMap">
+		<parameter property="sellerid" javaType="String" jdbcType="VARCHAR" mode="IN" />
+		<parameter property="results" javaType="ResultSet" jdbcType="CURSOR" mode="OUT" resultMap="ProductResultMap"/>
+	</parameterMap>
+	<select id="selectAllSP" parameterMap="selectAllMap" parameterType="hashMap" statementType="CALLABLE">
+	{ call product_selectAll(?,?)}
+	</select>
+<!-- ================================================================================ -->
+<!-- ========================================selectOne======================================== -->
+<parameterMap type="ProductVO" id="selectOneMap">
+	<parameter property="idx" javaType="Integer" jdbcType="INTEGER" mode="IN"/>
+	<parameter property="result" javaType="ResultSet" jdbcType="CURSOR" mode="OUT" resultMap="ProductResultMap"/>	
+</parameterMap>
+<select id="selectOneSP" parameterMap="selectOneMap" parameterType="hashMap" statementType="CALLABLE">
+{ call product_select(?,?)}
+</select>
+<!-- ================================================================================ -->
+
+</mapper>
