@@ -118,6 +118,7 @@ public class ProductController {
 		data.put("totalPage", totalPage);
 		data.put("pageSize", pageSize);
 		data.put("page", page);
+		data.put("totalCount", totalCount);//상품전체개수
 		data.put("data", list);
 		return data;
 	}
@@ -208,23 +209,63 @@ public class ProductController {
 		return map;
 	}
 	
-	//상품검색
-	@RequestMapping(value = "/sellerPL/dataSearch", method = RequestMethod.POST)
+	//상품검색 selectAll
+	@RequestMapping(value = "/sellerPL/dataSearch/{page}", method = RequestMethod.POST)
 	@ResponseBody		//나갈 때 object --> json
-	public Map SerachProduct(@RequestBody ProductVO productVO,
-														HttpServletRequest request) {
+	public Map SerachProduct(@PathVariable int page,
+													 @RequestBody ProductVO productVO,
+													 HttpServletRequest request) {
 		/**-----------------------------------------------------------------------------**/
 		HttpSession Session = request.getSession();
 		String sellerid = (String)Session.getAttribute("sellerid");
 									//sellerid의 세션 값을 String에 저장.
 		/**-----------------------------------------------------------------------------**/
-		productVO.setSellerid(sellerid);
-//		System.out.println(productVO);
-//		return null;
-		Map<String,Object> map = new HashMap<String,Object>();
-		List<ProductVO> list = this.productService.list(productVO);
-		map.put("code", Boolean.TRUE);
-		map.put("data", list);
-		return map;
+		productVO.setSellerid(sellerid);//productVO로 넘기려고
+		
+		Map<String,Object> countMap = new HashMap<String,Object>();
+		countMap.put("sellerid", sellerid); //mapper의 property값에 대입
+		countMap.put("pcode", productVO.getPcode());
+		countMap.put("pname", productVO.getPname());
+		countMap.put("origin", productVO.getOrigin());
+		countMap.put("category", productVO.getCategory());
+		countMap.put("category2", productVO.getCategory2());
+		countMap.put("writedate", productVO.getWritedate());
+		this.productService.getSearchTotalCount(countMap);//여기서 search-count값
+		int totalCount = (Integer)countMap.get("result");//그 결과를 대입
+		int pageSize = 10;
+		int totalPage = (totalCount%pageSize == 0) ? totalCount/pageSize : totalCount/pageSize +1; //전체페이지
+		if(totalPage < page) page = totalPage;
+		int pageCount = 10; //한 페이지에 뿌릴 수 있는 갯수는 10개씩
+		int start = (page-1) * pageCount +1;//시작페이지가 1일 때 ex)1
+		int end = start + pageCount -1;//끝페이지							ex)10
+		int startPage = ((page - 1) * pageCount / pageCount) + 1;//2
+		int endPage = startPage + pageCount - 1;//11
+		if(endPage> totalPage) endPage = totalPage;
+		
+		
+		Map<String,Object> map = new HashMap<String,Object>();//selectAllSP
+		map.put("sellerid", sellerid); //mapper의 property값에 대입
+		map.put("pcode", productVO.getPcode());
+		map.put("pname", productVO.getPname());
+		map.put("origin", productVO.getOrigin());
+		map.put("category", productVO.getCategory());
+		map.put("category2", productVO.getCategory2());
+		map.put("writedate", productVO.getWritedate());
+		map.put("start", start);
+		map.put("end", end);
+		
+		this.productService.selectSearch(map);//ProductList검색
+		
+		List<ProductVO> list = (List<ProductVO>)map.get("results");//maaper의 peoperty값
+		Map<String,Object> data = new HashMap<String,Object>();
+		data.put("code", Boolean.TRUE);
+		data.put("startPage", startPage);
+		data.put("endPage", endPage);
+		data.put("totalPage", totalPage);
+		data.put("pageSize", pageSize);
+		data.put("page", page);
+		data.put("totalCount", totalCount);//상품전체개수
+		data.put("data", list);
+		return data;
 	}
 }

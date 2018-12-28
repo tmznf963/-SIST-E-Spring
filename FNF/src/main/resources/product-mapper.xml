@@ -58,7 +58,7 @@ Date writedate
 </select>
 <!-- ==================================================================== -->
 
-<!-- ============================================ -->
+<!-- ====================상품코드중복체크======================== -->
 <select id="pcodeCheck" parameterType="String" resultType="Integer">
       SELECT COUNT(*) FROM product
       WHERE pcode = #{pcode}
@@ -111,23 +111,57 @@ Date writedate
 <select id="selectOneSP" parameterMap="selectOneMap" parameterType="hashMap" statementType="CALLABLE">
 { call product_select(?,?)}
 </select>
-<!-- ================================================================================ -->
+<!-- ==========================================OUTparameter있으면 statementType 적어야함====================================== -->
 
-<!-- ================================================================================ -->
+<!-- ====================================sellerList상품검색============================================ -->
 <select id="searchSelect" resultMap="ProductResultMap" resultType="ProductVO" parameterType="ProductVO">
 	SELECT * 
 	FROM product
 	WHERE 
 	(
-	pcode LIKE CONCAT(#{pcode},'%')
-	OR pname LIKE CONCAT(#{pname},'%')
-	OR origin LIKE CONCAT(#{origin},'%')
-	OR category LIKE CONCAT(#{category},'%')
-	OR category2 LIKE CONCAT(#{category2},'%')
-	OR TO_CHAR(writedate, 'yyyy-mm-dd') LIKE CONCAT(#{writedate},'%')
+	pcode LIKE CONCAT('%',(CONCAT(#{pcode},'%')))
+	OR pname LIKE CONCAT('%',(CONCAT(#{pname},'%')))
+	OR origin LIKE CONCAT('%',(CONCAT(#{origin},'%')))
+	OR category LIKE CONCAT('%',(CONCAT(#{category},'%')))
+	OR category2 LIKE CONCAT('%',(CONCAT(#{category2},'%')))
+	OR TO_CHAR(writedate, 'yyyy-mm-dd') LIKE CONCAT('%',(CONCAT(#{writedate},'%')))
 	) AND sellerid = #{sellerid}
 	ORDER BY idx DESC
 </select>
+<!-- ================================================================================ -->
+
+<!-- ===============================sellerSearchPaging===================================== -->
+<parameterMap type="hashMap" id="searchCountMap">
+	<parameter property="sellerid" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	<parameter property="pcode" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	<parameter property="pname" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	<parameter property="origin" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	<parameter property="category" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	<parameter property="category2" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	<parameter property="writedate" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+	<parameter property="result" javaType="Integer" jdbcType="INTEGER" mode="OUT"/>
+</parameterMap>
+<select id="searchTotalCountSP" parameterMap="searchCountMap" statementType="CALLABLE" parameterType="hashMap">
+	{ call product_seller_search_total_count(?,?,?,?,?,?,?,?)}
+</select>
+<!-- ==================================================================== -->
+
+<!-- ========================================sellerSearchAll======================================== -->
+	<parameterMap type="ProductVO" id="searchAllMap">
+		<parameter property="sellerid" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="pcode" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="pname" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="origin" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="category" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="category2" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="writedate" javaType="String" jdbcType="VARCHAR" mode="IN"/>
+		<parameter property="results" javaType="ResultSet" jdbcType="CURSOR" mode="OUT" resultMap="ProductResultMap"/>
+		<parameter property="start" javaType="Integer" jdbcType="INTEGER" mode="IN"/>
+		<parameter property="end" javaType="Integer" jdbcType="INTEGER" mode="IN"/>
+	</parameterMap>
+	<select id="searchSelectList" parameterMap="searchAllMap" parameterType="hashMap" statementType="CALLABLE">
+	{ call product_seller_search(?,?,?,?,?,?,?,?,?,?)}
+	</select>
 <!-- ================================================================================ -->
 
 </mapper>

@@ -62,7 +62,7 @@ $(function(){
 	});
 	
 	$.ajax({
-		url :  "sellerPL/1",
+		url :  "sellerPL/1", //controller --> /sellerPL/{page}
 		dataType : "json",
 		method : "POST",
 		success : function(result){
@@ -77,24 +77,27 @@ $(function(){
     $("#category").change(function(){
     	//alert($("#category").val());
     	if(($("#category").val()) == "농산물"){
-	    	var str ="<option>선택</option>";
+	    	var str ="<option value=''>선택</option>";
 	    	str += "<option value='채소'>채소</option>" +
 	    				"<option value='과일'>과일</option>" +
 	    				"<option value='쌀잡곡류'>쌀잡곡류</option>" +
 	    				"<option value='견과류'>견과류</option>";
 	    	$("#category2").html(str);
     	}else if(($("#category").val()) == "수산물"){
-    		var str="<option>선택</option>";
+    		var str="<option value=''>선택</option>";
     		str += "<option value='생선'>생선</option>" +
 							"<option value='갑각류'>갑각류</option>" +
 							"<option value='해조류'>해조류</option>" +
 							"<option value='건어물'>건어물</option>";
     		$("#category2").html(str);
     	}else if(($("#category").val()) == "가공식품"){
-    		var str="<option>선택</option>";
+    		var str="<option value=''>선택</option>";
     		str += "<option value='즙류'>즙류</option>" +
 							"<option value='분말류'>분말류</option>" +
 							"<option value='잼류'>잼류</option>";
+    		$("#category2").html(str);
+    	}else if(($("#category").val()) == ""){
+    		var str="<option value=''>선택</option>";
     		$("#category2").html(str);
     	}
     });
@@ -103,6 +106,7 @@ $(function(){
 
 //page 이동
 function goPage(pge) {
+	$("input[name=ck_main]").prop("checked", false);
 	page = pge;
 	$.ajax({
 		url : "sellerPL/"+ page,
@@ -116,6 +120,7 @@ function goPage(pge) {
 
 //상품 리스트 뿌려줄 함수
 function display(result) {
+	var totalCount = result.totalCount;
 	var startPage = result.startPage;
 	var endPage = result.endPage;
 	var totalPage = result.totalPage;
@@ -123,6 +128,7 @@ function display(result) {
 	page = result.page; //current Page
 	var result = result.data;
 	var count = result.length;
+	$("#Pcount").text(totalCount);
 	$("#count").text(count);
 	var str = null;
 	if (count == 0) {
@@ -137,7 +143,7 @@ function display(result) {
             str +="<td>"+result[i].pcode+"</td>";
             str +="<td>"+result[i].pname+"</td>";
             str +="<td>";
-            str +="    <img src='img/"+result[i].filename+"' width='50' height='75'/>";
+            str +="    <img src='img/"+result[i].filename+"' width='45' height='55'/>";
             str +="</td>";
             str +="<td>"+result[i].category+"&nbsp;&gt;&nbsp;"+result[i].category2+"</td>";
             str +="<td class='text-right'>";
@@ -198,7 +204,7 @@ function display(result) {
 		pageStr += "<a href='javascript:goPage(" + totalPage + ")'><button type='button'  class='btn btn-info btn-sm'>끝</button></a>";
 	}
 	$("#paging").html(pageStr);
-}
+}//display()
 
 //가격 세자리마다 , 찍기
 function addComma(num) {
@@ -270,41 +276,162 @@ function dataAdd(){
  //상품검색버튼 눌렀을 때
  //category, category2 , pcode, pname, origin, writedate
 function dataSearch(){
+	 //input tag들 value="" 초기값 
 	var category = $("#category").val();
 	var category2 = $("#category2").val();
 	var pcode = $("#pcode").val();
 	var pname = $("#pname").val();
 	var origin = $("#origin").val();
 	var writedate = $("#writedate").val();
-	if(category=="") category = "null";
-	if(category2=="") category2 = "null";
-	if(pcode=="") pcode = "null";
-	if(pname=="") pname = "null";
-	if(origin=="") origin = "null";
-	if(writedate=="") writedate = "null";
-
-	 $.ajax({
-		 url : "/fnf/sellerPL/dataSearch",
-		 dataType : "json",  //받는 type
-		 method : "POST",
-		 contentType : "application/json; charset=UTF-8",	//보내는 Type
-		 data : JSON.stringify({
-			 "category" :  category,
-			 "category2" : category2,
-			 "pcode" : pcode,
-			 "pname" : pname,
-			 "origin" : origin,
-			 "writedate" : writedate
-		 }),
-		 success : function(data){
-			 console.log("data  : " + data.data[1].writedate);
-		 },
-		 error : function(err){
-			 console.log("err 발생 : " + err);
-		 }
-	 });
+	if(category == "" && category2 == "" && pcode == "" && pname == "" && origin == "" && writedate == ""){
+		alert("검색할 내용을 입력해주세요.");
+		return;
+	}else{
+		$.ajax({
+			 url : "/fnf/sellerPL/dataSearch/1", //--> /sellerPL/dataSearch/{page}
+			 dataType : "json",  //받는 type
+			 method : "POST",
+			 contentType : "application/json; charset=UTF-8",	//보내는 Type
+			 data : JSON.stringify({
+				 "category" :  category,
+				 "category2" : category2,
+				 "pcode" : pcode,
+				 "pname" : pname,
+				 "origin" : origin,
+				 "writedate" : writedate
+			 }),
+			 success : function(result){
+				 displySearch(result);
+			 },
+			 error : function(err){
+				 console.log("err 발생 : " + err);
+			 }
+		 });
+	}
 }
  
+//SearchPage 이동
+function goSearchPage(pge) {
+	$("input[name=ck_main]").prop("checked", false);
+	page = pge;
+	$.ajax({
+		url : "/fnf/sellerPL/dataSearch/"+ page,
+		dataType : "json",
+		method : "POST",
+		success : function(result) {
+			displySearch(result);
+		}
+	});
+}
+ 
+ //검색data List뿌려주기
+ function displySearch(result){
+	 var totalCount = result.totalCount;
+		var startPage = result.startPage;
+		var endPage = result.endPage;
+		var totalPage = result.totalPage;
+		var pageSize = result.pageSize;
+		page = result.page; //current Page
+		var result = result.data;
+		var count = result.length;
+		$("#Pcount").text(totalCount);
+		$("#count").text(count);
+		var str = null;
+		if (count == 0) {
+			str +="<tr><td colspan='9' style='text-align:center'>등록된 상품이 없습니다.</td></tr>";
+		} else if (count > 0) {
+			for (var i = 0; i < count; i++) {
+				var writedate = result[i].writedate.substr(0, 10);
+				str +="<tr>";
+				str += "<td>";
+	            str +="<input name='ck_sub' type='checkbox' value="+result[i].idx+">";
+	            str +="</td>";
+	            str +="<td>"+result[i].pcode+"</td>";
+	            str +="<td>"+result[i].pname+"</td>";
+	            str +="<td>";
+	            str +="    <img src='img/"+result[i].filename+"' width='45' height='55'/>";
+	            str +="</td>";
+	            str +="<td>"+result[i].category+"&nbsp;&gt;&nbsp;"+result[i].category2+"</td>";
+	            str +="<td class='text-right'>";
+	            str +=""+addComma(result[i].price)+"원";
+	            str +="</td>";
+	            str +="<td>"+result[i].sell_num+"</td>";
+	            str +="<td>"+writedate+"</td>";
+	            str +="<td>";			//    /sellerPD/{idx}
+	            str +="    <a href='sellerPD/"+result[i].idx+"'><button class='btn btn-info btn-xs'  type='button' title='보기'>보기</button></a>";
+	            str +="    <button class='btn btn-warning btn-xs'onclick='productUp("+result[i].idx+")' type='button' title='수정' >수정</button>";
+	            str +="    <button class='btn btn-danger btn-xs'  onclick='productDel("+result[i].idx+")' type='button' title='삭제' >삭제</button>";
+	            str +="</td>";
+				str +="</tr>";
+				//<a href='detail/"+result[i].idx+"'> == localhost:8080/fnf/detail/4
+			}
+		}
+		$("#ListAll").html(str);
+		$("#paging").empty();
+		$("#paging").attr("style", "text-align:center");
+
+		var pageStr = null;
+		// <<  <
+		if (page == 1) { //현재페이지가 1일 때
+			pageStr = "<button type='button' class='btn btn-info btn-sm'>처음</button>&nbsp;&nbsp;&nbsp;";
+			pageStr += "<button type='button' class='btn btn-default btn-sm'>이전</button>&nbsp;&nbsp;";
+		} else if (page != 1) { // 현재페이지가 1이 아닐 때
+			pageStr = "<a href='javascript:goSearchPage(1)'><button type='button' class='btn btn-info btn-sm'>처음</button></a>&nbsp;&nbsp;&nbsp;";
+			if((startPage - pageSize) <= 0){
+				pageStr += "<a href='javascript:goSearchPage(" + 1 + ")'><button type='button' class='btn btn-default btn-sm'>이전</button></a>&nbsp;&nbsp;&nbsp;";
+			}else{
+				pageStr += "<a href='javascript:goSearchPage(" + (startPage - pageSize) 	+ ")'><button type='button' class='btn btn-default btn-sm'>이전</button></a>&nbsp;&nbsp;&nbsp;";
+			}
+		}
+		
+		// 1 2 3 4 5 6 7 8 9 10
+		if(endPage <=10){ // 끝 나는 페이지가 10보다 작으면
+			for (var k = 1; k <= endPage; k++) {
+				if (page == k) //현재 페이지
+					pageStr += "<button class='btn btn-default btn-sm active' type='button'>"+k+"</button>&nbsp;&nbsp;&nbsp;";
+				else  //현재페이지가 아닌
+					pageStr += "<a href='javascript:goSearchPage(" + k + ")'><button class='btn btn-default btn-sm' type='button'>" + k + "</button></a>&nbsp;&nbsp;&nbsp;";
+			}
+		}else{
+			for (var k = startPage; k <= endPage; k++) {
+				if (page == k) //현재 페이지
+					pageStr += "<button class='btn btn-default btn-sm active' type='button'>"+k+"</button>&nbsp;&nbsp;&nbsp;";
+				else  //현재페이지가 아닌
+					pageStr += "<a href='javascript:goSearchPage(" + k + ")'><button class='btn btn-default btn-sm' type='button'>" + k + "</button></a>&nbsp;&nbsp;&nbsp;";
+			}
+		}
+		
+		// >  >>
+		if (page == totalPage) {
+			pageStr += "<button type='button' class='btn btn-default btn-sm'>다음</button>&nbsp;&nbsp;&nbsp;";
+			pageStr += "<button type='button'  class='btn btn-info btn-sm'>끝</button>";
+		} else if (page != totalPage) {
+			pageStr += "<a href='javascript:goSearchPage(" + (startPage + pageSize) + ")'><button type='button' class='btn btn-default btn-sm'>다음</button></a>&nbsp;&nbsp;&nbsp;";
+			pageStr += "<a href='javascript:goSearchPage(" + totalPage + ")'><button type='button'  class='btn btn-info btn-sm'>끝</button></a>";
+		}
+		$("#paging").html(pageStr);
+	}//displySearch()
+ 
+	 //전체목록 버튼
+	 function returnList(){
+		$("#category").val("");
+		$("#category2").val("");
+		$("#pcode").val("");
+		$("#pname").val("");
+		$("#origin").val("");
+		$("#writedate").val("");//input값 초기화
+		 $.ajax({
+				url :  "sellerPL/1", //controller --> /sellerPL/{page}
+				dataType : "json",
+				method : "POST",
+				success : function(result){
+					display(result);
+				},
+				error : function(err){
+					console.log("err : " +err);
+				}
+			});//ajax
+	 }//returnList()
 </script>
 </head>
 <body>
@@ -385,18 +512,21 @@ function dataSearch(){
 										<div class="form-group">
 											<label class="col-sm-2 col-xs-12 control-label" for="s_like_pr_origin" style=" text-align: right;">원산지</label>
 											<div class="col-sm-4 col-xs-12">
-												<input class="form-control" id="origin" name="origin" placeholder="브랜드명" type="text" value="" />
+												<input class="form-control" id="origin" name="origin" placeholder="원산지" type="text" value="" />
 											</div>
 											<label class="col-sm-2 col-xs-12 control-label" for="pr_writedate" style=" text-align: right;">등록일</label>
 											<div class="col-sm-4 col-xs-12">
-												<input class="form-control" id="writedate" name="writedate" placeholder="등록일" type="text" value="" />
+												<input class="form-control" id="writedate" name="writedate" placeholder="yyyy-mm-dd" type="text" value="" />
 											</div>	
 										</div>
 										<br><br>
 										
 										<div class="form-group">
-											<div class="col-xs-12">
+											<div class="col-xs-12"  style="padding-bottom: 10px;">
 												<button class="btn btn-info btn-lg btn-block" onclick="dataSearch()" type="button" title="검색">검색</button>
+											</div>
+											<div class="col-xs-12">
+												<button class="btn btn-basic btn-lg btn-block" onclick="returnList()" type="button" title="전체목록">전체목록</button>
 											</div>
 										</div>
 									
@@ -412,7 +542,8 @@ function dataSearch(){
                 <h3>상품 리스트</h3>
                 <hr>
                 <ul class="nav navbar-right panel_toolbox">
-                    <li>[<span id="count"></span> / ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                    <li>[ Total  <span id="Pcount"></span> Rows ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                    <li>[ 게시글 수  <span id="count"></span> ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                 </ul>
                 <div class="clearfix"></div>
             </div>

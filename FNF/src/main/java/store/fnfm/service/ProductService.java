@@ -19,4 +19,6 @@ public interface ProductService {
 	void deleteProduct(int idx);
 	String restore(MultipartFile file);//fileUpload
 	List<ProductVO> list(ProductVO productVO);//검색data list 받아오기
+	void selectSearch(Map map);//검색된 productList
+	void getSearchTotalCount(Map map);//검색결과페이징
 }

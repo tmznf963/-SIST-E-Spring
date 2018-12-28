@@ -55,7 +55,15 @@ public class ProductDAOImpl implements ProductDAO {
 	}
 	@Override
 	public List<ProductVO> list(ProductVO productVO) {
-		return this.sqlSession.selectList("Product.searchSelect",productVO);
+		return this.sqlSession.selectList("Product.searchSelect",productVO);//판매자상품검색List
+	}
+	@Override
+	public void getSearchTotalCount(Map map) {
+		this.sqlSession.selectOne("Product.searchTotalCountSP",map);
+	}
+	@Override
+	public void selectSearch(Map map) {
+		this.sqlSession.selectList("Product.searchSelectList",map);//판매자상품검색된 list 받아오기
 	}
 
 	

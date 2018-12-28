@@ -107,7 +107,15 @@ public class ProductServiceImpl implements ProductService {
 	
 	@Override
 	public List<ProductVO> list(ProductVO productVO) {
-		return this.productDAO.list(productVO);//상품검색된 list 받아오기
+		return this.productDAO.list(productVO);//판매자상품검색된 list 받아오기
+	}
+	@Override
+	public void getSearchTotalCount(Map map) {
+		this.productDAO.getSearchTotalCount(map);
+	}
+	@Override
+	public void selectSearch(Map map) {
+		this.productDAO.selectSearch(map);//판매자상품검색된 list 받아오기
 	}
 
 	

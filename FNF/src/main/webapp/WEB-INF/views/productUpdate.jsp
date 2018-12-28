@@ -95,6 +95,7 @@
 			}else{
 				$("#booked_category").val(category+">"+category2);	
 				$("#btnUpdate").attr("disabled", false);
+				alert("상품종류가 추가되었습니다.");
 			}
 		});
 		

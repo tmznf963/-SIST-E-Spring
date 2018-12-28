@@ -201,3 +201,69 @@ BEGIN
   WHERE idx = p_idx;
   COMMIT;
 END;
+
+--상품검색
+CREATE OR REPLACE procedure product_seller_search
+(
+	p_sellerid IN		product.sellerid%TYPE,
+	p_pcode IN		product.pcode%TYPE,
+  p_pname IN		product.pname%TYPE,
+  p_origin IN		product.origin%TYPE,
+  p_category IN		product.category%TYPE,
+  p_category2 IN		product.category2%TYPE,
+  p_writedate IN		VARCHAR2,
+  product_record 			OUT		 SYS_REFCURSOR,
+  v_start             IN          NUMBER,
+	v_end               IN          NUMBER
+)
+AS
+BEGIN
+	OPEN product_record FOR
+   SELECT B.idx, pcode, pname, filename, CATEGORY,category2, price, sell_num, writedate
+   FROM
+   	(SELECT rownum AS rnum, A.idx, A.pcode, A.pname, A.filename, A.CATEGORY, A.category2, A.price, A.sell_num, A.writedate
+   FROM
+		(SELECT idx, pcode, pname, filename, CATEGORY,category2, price, sell_num, writedate, sellerid, origin
+			FROM product ORDER BY writedate DESC) A
+			WHERE rownum <= v_end
+      AND sellerid = p_sellerid
+      AND
+      (
+			pcode LIKE CONCAT('%',(CONCAT(p_pcode,'%')))
+			AND pname LIKE CONCAT('%',(CONCAT(p_pname,'%')))
+			AND origin LIKE CONCAT('%',(CONCAT(p_origin,'%')))
+			AND category LIKE CONCAT('%',(CONCAT(p_category,'%')))
+			AND category2 LIKE CONCAT('%',(CONCAT(p_category2,'%')))
+			AND TO_CHAR(writedate, 'yyyy-mm-dd') LIKE CONCAT('%',(CONCAT(p_writedate,'%')))
+      )
+      ) B
+   WHERE B.rnum >= v_start;
+END;
+
+--상품검색_seller_Total_count
+   CREATE OR REPLACE procedure PRODUCT_SELLER_SEARCH_TOTAL_COUNT
+(
+	p_sellerid IN		product.sellerid%TYPE,
+	p_pcode IN		product.pcode%TYPE,
+  p_pname IN		product.pname%TYPE,
+  p_origin IN		product.origin%TYPE,
+  p_category IN		product.category%TYPE,
+  p_category2 IN		product.category2%TYPE,
+  p_writedate IN		VARCHAR2,
+  p_count	OUT	NUMBER
+)
+IS
+BEGIN
+  SELECT COUNT(*) INTO p_count
+  FROM PRODUCT
+	WHERE
+	(
+	pcode LIKE CONCAT('%',(CONCAT(p_pcode,'%')))
+	AND pname LIKE CONCAT('%',(CONCAT(p_pname,'%')))
+	AND origin LIKE CONCAT('%',(CONCAT(p_origin,'%')))
+	AND category LIKE CONCAT('%',(CONCAT(p_category,'%')))
+	AND category2 LIKE CONCAT('%',(CONCAT(p_category2,'%')))
+	AND TO_CHAR(writedate, 'yyyy-mm-dd') LIKE CONCAT('%',(CONCAT(p_writedate,'%')))
+	) AND sellerid = p_sellerid
+  ORDER BY idx DESC;
+END;
