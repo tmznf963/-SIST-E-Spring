@@ -3,12 +3,12 @@
   <%
   /** 로그인.jsp에서 처리할 session값 저장**/ 
   HttpSession Session = request.getSession(true);
-   String sellerid="minho";// == String sellerid = request.getParameter("id");  // jsp에서 넘어오는 input name="id" value="값"
-   Session.setAttribute("sellerid", sellerid);//sellerid라는 세션에 minho저장
+   String user_id="minho";// == String sellerid = request.getParameter("id");  // jsp에서 넘어오는 input name="id" value="값"
+   Session.setAttribute("user_id", user_id);//sellerid라는 세션에 minho저장
    /** 로그인.jsp에서 처리할 session값 저장**/
    //다른 jsp파일 html body태그 안에서 sellerid세션 값을 사용하고 싶을 때 ${sessionScope.sellerid}
    
-   String id = (String)Session.getAttribute("sellerid");//sellerid세션의 값을 변수 "id"에 저장
+   String id = (String)Session.getAttribute("user_id");//sellerid세션의 값을 변수 "id"에 저장
  //html body태그 안에서 sellerid세션 값을 사용하고 싶을 때 <％=id％>
   %>
 <!DOCTYPE html>
@@ -66,10 +66,11 @@ $(function(){
 	});
 	
 	$.ajax({
-		url :  " sellerPL/1", //controller --> /sellerPL/{page}
+		url :  "/sellerOL/1", //controller --> /sellerOL/{page}
 		dataType : "json",
 		method : "POST",
 		success : function(result){
+			console.log(result);
 			display(result);
 		},
 		error : function(err){
@@ -77,34 +78,6 @@ $(function(){
 		}
 	});//ajax
 	
-	 //상품종류 선택할 때
-    $("#category").change(function(){
-    	//alert($("#category").val());
-    	if(($("#category").val()) == "농산물"){
-	    	var str ="<option value=''>선택</option>";
-	    	str += "<option value='채소'>채소</option>" +
-	    				"<option value='과일'>과일</option>" +
-	    				"<option value='쌀잡곡류'>쌀잡곡류</option>" +
-	    				"<option value='견과류'>견과류</option>";
-	    	$("#category2").html(str);
-    	}else if(($("#category").val()) == "수산물"){
-    		var str="<option value=''>선택</option>";
-    		str += "<option value='생선'>생선</option>" +
-							"<option value='갑각류'>갑각류</option>" +
-							"<option value='해조류'>해조류</option>" +
-							"<option value='건어물'>건어물</option>";
-    		$("#category2").html(str);
-    	}else if(($("#category").val()) == "가공식품"){
-    		var str="<option value=''>선택</option>";
-    		str += "<option value='즙류'>즙류</option>" +
-							"<option value='분말류'>분말류</option>" +
-							"<option value='잼류'>잼류</option>";
-    		$("#category2").html(str);
-    	}else if(($("#category").val()) == ""){
-    		var str="<option value=''>선택</option>";
-    		$("#category2").html(str);
-    	}
-    });
 	
 });//function()
 
@@ -113,7 +86,7 @@ function goPage(pge) {
 	$("input[name=ck_main]").prop("checked", false);
 	page = pge;
 	$.ajax({
-		url : "sellerPL/"+ page,
+		url : "/sellerOL/"+ page,
 		dataType : "json",
 		method : "POST",
 		success : function(result) {
@@ -136,29 +109,32 @@ function display(result) {
 	$("#count").text(count);
 	var str = null;
 	if (count == 0) {
-		str +="<tr><td colspan='9' style='text-align:center'>등록된 상품이 없습니다.</td></tr>";
+		str +="<tr><td colspan='14' style='text-align:center'>등록된 주문이 없습니다.</td></tr>";
 	} else if (count > 0) {
 		for (var i = 0; i < count; i++) {
-			var writedate = result[i].writedate.substr(0, 10);
+			var writedate = result[i].pay_date.substr(0, 10);
 			str +="<tr>";
 			str += "<td>";
-            str +="<input name='ck_sub' type='checkbox' value="+result[i].idx+">";
+            str +="<input name='ck_sub' type='checkbox' value="+result[i].order_idx+">";
             str +="</td>";
-            str +="<td>"+result[i].pcode+"</td>";
+            str +="<td>"+result[i].idx+"</td>";
             str +="<td>"+result[i].pname+"</td>";
-            str +="<td>";
-            str +="    <img src='img/"+result[i].filename+"' width='45' height='55'/>";
-            str +="</td>";
-            str +="<td>"+result[i].category+"&nbsp;&gt;&nbsp;"+result[i].category2+"</td>";
+            str +="<td>"+result[i].user_name+"("+result[i].user_id+")</td>";
             str +="<td class='text-right'>";
-            str +=""+addComma(result[i].price)+"원";
+            str +=""+addComma(result[i].del_price)+"원";
             str +="</td>";
-            str +="<td>"+result[i].sell_num+"</td>";
+            str +="<td class='text-right'>";
+            str +=""+addComma(result[i].totalprice)+"원";
+            str +="</td>";
+            str +="<td>"+result[i].receiver_name+"</td>";
+            str +="<td>"+result[i].del_name+"</td>";
+            str +="<td>"+result[i].del_code+"</td>";
+            str +="<td>"+result[i].pay+"</td>";
+            str +="<td>"+result[i].status+"</td>";
             str +="<td>"+writedate+"</td>";
-            str +="<td>";			//    /sellerPD/{idx}
-            str +="    <a href='sellerPD/"+result[i].idx+"'><button class='btn btn-info btn-xs'  type='button' title='보기'>보기</button></a>";
-            str +="    <button class='btn btn-warning btn-xs'onclick='productUp("+result[i].idx+")' type='button' title='수정' >수정</button>";
-            str +="    <button class='btn btn-danger btn-xs'  onclick='productDel("+result[i].idx+")' type='button' title='삭제' >삭제</button>";
+            str +="<td>예외처리</td>";
+            str +="<td>";		
+            str +="    <button class='btn btn-warning btn-xs'onclick='orderUp("+result[i].idx+")' type='button' title='수정' >수정</button>";
             str +="</td>";
 			str +="</tr>";
 			//<a href='detail/"+result[i].idx+"'> == localhost:8080 detail/4
@@ -217,21 +193,23 @@ function addComma(num) {
 }
 
 //상품 수정 sellerPU/idx
-function productUp(idx){
-	location.href="/sellerPU/"+idx;
+function orderUp(idx){
+	//console.log(typeof idx);
+	var n = idx.toString();
+	location.href="/sellerOD/"+n+"";
 }
 
-//단일 상품 삭제 sellerPL/idx
+//단일 상품 삭제 sellerOL/idx
 function productDel(idx){
 	//alert(idx);
 	if(confirm('삭제 처리를 진행하시겠습니까?')){
 		$.ajax({
-			url : " sellerPL/"+parseInt(idx),
+			url : "/sellerOL/"+parseInt(idx),
 			//dataType: "json", RequestBody로 받을거 아니면 안적어두 된다.
 			method : "DELETE",
 			success : function(data){
 				alert("상품이 삭제되었습니다.");
-				location.href="/sellerPL";
+				location.href="/sellerOL";
 			},
 			error : function(err){
 				console.log("err 발생 : " + err);
@@ -247,14 +225,14 @@ function productDel(idx){
 function dataListDelUp(){
 	var $chk_sub = $('input[name="ck_sub"]:checked');
 	if( 1 > $chk_sub.length ){//체크가 없다면 length는 0
-		alert('선택 된 상품이 없습니다.');
+		alert('선택 된 주문이 없습니다.');
 		return;
  	}else{//체크가 있다면
 		if( confirm( '삭제 처리를 진행하시겠습니까?' ) ){
 	 		$chk_sub.each(function() {//반복문 돌려서 선택된 상품의 val()값 == 상품idx값을 DELETE로 보낸다.
 	 			var test = $(this).val();
 	 			$.ajax({
-	 				url : " sellerPL/"+parseInt(test),
+	 				url : "/sellerOL/"+parseInt(test),
 	 				method : "DELETE",
 	 				success : function(data){
 	 					console.log("삭제완료");
@@ -265,7 +243,7 @@ function dataListDelUp(){
 	 			});
 	 		});//each반복문
 	 		alert("상품이 삭제되었습니다.");
-			location.href="/sellerPL";
+			location.href="/sellerOL";
 		}else{
 			return;
 		}
@@ -292,7 +270,7 @@ function dataSearch(){
 		return;
 	}else{
 		$.ajax({
-			 url : " sellerPL/dataSearch/1", //--> /sellerPL/dataSearch/{page}
+			 url : "/sellerOL/dataSearch/1", //--> /sellerOL/dataSearch/{page}
 			 dataType : "json",  //받는 type
 			 method : "POST",
 			 contentType : "application/json; charset=UTF-8",	//보내는 Type
@@ -319,7 +297,7 @@ function goSearchPage(pge) {
 	$("input[name=ck_main]").prop("checked", false);
 	page = pge;
 	$.ajax({
-		url : " sellerPL/dataSearch/"+ page,
+		url : "/sellerOL/dataSearch/"+ page,
 		dataType : "json",
 		method : "POST",
 		success : function(result) {
@@ -342,7 +320,7 @@ function goSearchPage(pge) {
 		$("#count").text(count);
 		var str = null;
 		if (count == 0) {
-			str +="<tr><td colspan='9' style='text-align:center'>등록된 상품이 없습니다.</td></tr>";
+			str +="<tr><td colspan='14' style='text-align:center'>등록된 주문이 없습니다.</td></tr>";
 		} else if (count > 0) {
 			for (var i = 0; i < count; i++) {
 				var writedate = result[i].writedate.substr(0, 10);
@@ -363,7 +341,7 @@ function goSearchPage(pge) {
 	            str +="<td>"+writedate+"</td>";
 	            str +="<td>";			//    /sellerPD/{idx}
 	            str +="    <a href='sellerPD/"+result[i].idx+"'><button class='btn btn-info btn-xs'  type='button' title='보기'>보기</button></a>";
-	            str +="    <button class='btn btn-warning btn-xs'onclick='productUp("+result[i].idx+")' type='button' title='수정' >수정</button>";
+	            str +="    <button class='btn btn-warning btn-xs'onclick='orderUp("+result[i].idx+")' type='button' title='수정' >수정</button>";
 	            str +="    <button class='btn btn-danger btn-xs'  onclick='productDel("+result[i].idx+")' type='button' title='삭제' >삭제</button>";
 	            str +="</td>";
 				str +="</tr>";
@@ -425,7 +403,7 @@ function goSearchPage(pge) {
 		$("#origin").val("");
 		$("#writedate").val("");//input값 초기화
 		 $.ajax({
-				url :  "sellerPL/1", //controller --> /sellerPL/{page}
+				url :  "/sellerOL/1", //controller --> /sellerOL/{page}
 				dataType : "json",
 				method : "POST",
 				success : function(result){
@@ -479,10 +457,10 @@ function goSearchPage(pge) {
 							<div class="col-md-12 col-sm-12 col-xs-12" style="padding-left: 30px;">
 								<div class="x_panel">
 									<div class="x_title">
-										<h1 style="padding-top: 20px;">상품관리</h1>
+										<h1 style="padding-top: 20px;">주문 관리</h1>
 										<hr>
 										<br>
-               						 <h3>상품 검색</h3>
+               						 <h3>주문 검색</h3>
 									</div>
 									<hr>
 									<div class="x_content">
@@ -548,7 +526,7 @@ function goSearchPage(pge) {
     <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left: 30px;">
         <div class="x_panel">
             <div class="x_title">
-                <h3>상품 리스트</h3>
+                <h3>주문 리스트</h3>
                 <hr>
                 <ul class="nav navbar-right panel_toolbox">
                     <li>[ Total  <span id="Pcount"></span> Rows ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
@@ -565,13 +543,18 @@ function goSearchPage(pge) {
                                 <th>
                                     <input id="ck_main" name="ck_main" type="checkbox" />
                                 </th>
-                                <th>상품코드</th>
-                                <th>상품명</th>
-                                <th>상품이미지</th>
-                                <th>카테고리</th>
-                                <th>판매가</th>
-                                <th>판매수</th>
-                                <th>등록일</th>
+                                <th>주문번호</th>
+                                <th>주문상품</th>
+                                <th>회원명</th>
+                                <th>배송비</th>
+                                <th>결제금액</th>
+                                <th>받으시는분</th>
+                                <th>배송업체</th>
+                                <th>송장번호</th>
+                                <th>결제타입</th>
+                                <th>상태값</th>
+                                <th>주문일</th>
+                                <th>주문처리</th>
                                 <th>관리</th>
                             </tr>
                         </thead>

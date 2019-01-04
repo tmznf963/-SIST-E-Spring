@@ -3,12 +3,12 @@
   <%
   /** 로그인.jsp에서 처리할 session값 저장**/ 
   HttpSession Session = request.getSession(true);
-   String sellerid="minho";// == String sellerid = request.getParameter("id");  // jsp에서 넘어오는 input name="id" value="값"
-   Session.setAttribute("sellerid", sellerid);//sellerid라는 세션에 minho저장
+   String user_id="6666"; // == String sellerid = request.getParameter("id");  // jsp에서 넘어오는 input name="id" value="값"
+   Session.setAttribute("user_id", user_id);//sellerid라는 세션에 minho저장
    /** 로그인.jsp에서 처리할 session값 저장**/
    //다른 jsp파일 html body태그 안에서 sellerid세션 값을 사용하고 싶을 때 ${sessionScope.sellerid}
    
-   String id = (String)Session.getAttribute("sellerid");//sellerid세션의 값을 변수 "id"에 저장
+   String id = (String)Session.getAttribute("user_id");//sellerid세션의 값을 변수 "id"에 저장
  //html body태그 안에서 sellerid세션 값을 사용하고 싶을 때 <％=id％>
   %>
 <!DOCTYPE html>
@@ -42,13 +42,13 @@
 <link href="css/style2.css" rel="stylesheet"> 
 
 <style>
-th, td {
-	text-align: center;
-}
-.sidebar-nav li a:hover {
-    color: white;
-    background: #9DC518;
-  }
+	th,td{
+		text-align :center;
+	}
+	.sidebar-nav li a:hover {
+		    color: white;
+		    background: #9DC518;
+		  }
 </style>
 <script src="js/jquery.min.js"></script> 
 <script>
@@ -66,7 +66,7 @@ $(function(){
 	});
 	
 	$.ajax({
-		url :  " sellerPL/1", //controller --> /sellerPL/{page}
+		url :  "sellerSMSG/1", //controller --> /sellerSMSG/{page}
 		dataType : "json",
 		method : "POST",
 		success : function(result){
@@ -77,35 +77,6 @@ $(function(){
 		}
 	});//ajax
 	
-	 //상품종류 선택할 때
-    $("#category").change(function(){
-    	//alert($("#category").val());
-    	if(($("#category").val()) == "농산물"){
-	    	var str ="<option value=''>선택</option>";
-	    	str += "<option value='채소'>채소</option>" +
-	    				"<option value='과일'>과일</option>" +
-	    				"<option value='쌀잡곡류'>쌀잡곡류</option>" +
-	    				"<option value='견과류'>견과류</option>";
-	    	$("#category2").html(str);
-    	}else if(($("#category").val()) == "수산물"){
-    		var str="<option value=''>선택</option>";
-    		str += "<option value='생선'>생선</option>" +
-							"<option value='갑각류'>갑각류</option>" +
-							"<option value='해조류'>해조류</option>" +
-							"<option value='건어물'>건어물</option>";
-    		$("#category2").html(str);
-    	}else if(($("#category").val()) == "가공식품"){
-    		var str="<option value=''>선택</option>";
-    		str += "<option value='즙류'>즙류</option>" +
-							"<option value='분말류'>분말류</option>" +
-							"<option value='잼류'>잼류</option>";
-    		$("#category2").html(str);
-    	}else if(($("#category").val()) == ""){
-    		var str="<option value=''>선택</option>";
-    		$("#category2").html(str);
-    	}
-    });
-	
 });//function()
 
 //page 이동
@@ -113,7 +84,7 @@ function goPage(pge) {
 	$("input[name=ck_main]").prop("checked", false);
 	page = pge;
 	$.ajax({
-		url : "sellerPL/"+ page,
+		url : "sellerSMSG/"+ page,
 		dataType : "json",
 		method : "POST",
 		success : function(result) {
@@ -122,7 +93,12 @@ function goPage(pge) {
 	});
 }
 
-//상품 리스트 뿌려줄 함수
+// <th>읽은상태</th>
+// <th>받는사람</th>
+// <th>제목</th>
+// <th>보낸날짜</th>
+// <th>관리</th>
+//MSG 리스트 뿌려줄 함수
 function display(result) {
 	var totalCount = result.totalCount;
 	var startPage = result.startPage;
@@ -133,10 +109,9 @@ function display(result) {
 	var result = result.data;
 	var count = result.length;
 	$("#Pcount").text(totalCount);
-	$("#count").text(count);
 	var str = null;
 	if (count == 0) {
-		str +="<tr><td colspan='9' style='text-align:center'>등록된 상품이 없습니다.</td></tr>";
+		str +="<tr><td colspan='6' style='text-align:center'>메시지가 없습니다.</td></tr>";
 	} else if (count > 0) {
 		for (var i = 0; i < count; i++) {
 			var writedate = result[i].writedate.substr(0, 10);
@@ -144,24 +119,16 @@ function display(result) {
 			str += "<td>";
             str +="<input name='ck_sub' type='checkbox' value="+result[i].idx+">";
             str +="</td>";
-            str +="<td>"+result[i].pcode+"</td>";
-            str +="<td>"+result[i].pname+"</td>";
-            str +="<td>";
-            str +="    <img src='img/"+result[i].filename+"' width='45' height='55'/>";
-            str +="</td>";
-            str +="<td>"+result[i].category+"&nbsp;&gt;&nbsp;"+result[i].category2+"</td>";
-            str +="<td class='text-right'>";
-            str +=""+addComma(result[i].price)+"원";
-            str +="</td>";
-            str +="<td>"+result[i].sell_num+"</td>";
+            str +="<td>"+result[i].status+"</td>";
+            str +="<td>"+result[i].receive_id+"</td>";
+            str +="<td>"+result[i].title+"</td>";
             str +="<td>"+writedate+"</td>";
-            str +="<td>";			//    /sellerPD/{idx}
-            str +="    <a href='sellerPD/"+result[i].idx+"'><button class='btn btn-info btn-xs'  type='button' title='보기'>보기</button></a>";
-            str +="    <button class='btn btn-warning btn-xs'onclick='productUp("+result[i].idx+")' type='button' title='수정' >수정</button>";
-            str +="    <button class='btn btn-danger btn-xs'  onclick='productDel("+result[i].idx+")' type='button' title='삭제' >삭제</button>";
+            str +="<td>";			//    /viewSMSG/{idx}
+            str +="    <a href='/viewSMSG/"+result[i].idx+"'><button class='btn btn-info btn-xs'  type='button' title='보기'>보기</button></a>";
+            str +="    <button class='btn btn-danger btn-xs'  onclick='msgDel("+result[i].idx+")' type='button' title='삭제' >삭제</button>";
             str +="</td>";
 			str +="</tr>";
-			//<a href='detail/"+result[i].idx+"'> == localhost:8080 detail/4
+			//<a href='detail/"+result[i].idx+"'> == localhost:8080detail/4
 		}
 	}
 	$("#ListAll").html(str);
@@ -210,28 +177,17 @@ function display(result) {
 	$("#paging").html(pageStr);
 }//display()
 
-//가격 세자리마다 , 찍기
-function addComma(num) {
-  var regexp = /\B(?=(\d{3})+(?!\d))/g;
-  return num.toString().replace(regexp, ',');
-}
 
-//상품 수정 sellerPU/idx
-function productUp(idx){
-	location.href="/sellerPU/"+idx;
-}
-
-//단일 상품 삭제 sellerPL/idx
-function productDel(idx){
-	//alert(idx);
+//단일 메시지 삭제 
+function msgDel(idx){
 	if(confirm('삭제 처리를 진행하시겠습니까?')){
 		$.ajax({
-			url : " sellerPL/"+parseInt(idx),
+			url : "viewSMSG/"+parseInt(idx),
 			//dataType: "json", RequestBody로 받을거 아니면 안적어두 된다.
-			method : "DELETE",
+			method : "PUT",
 			success : function(data){
-				alert("상품이 삭제되었습니다.");
-				location.href="/sellerPL";
+				alert("메시지가 삭제되었습니다.");
+				location.href="/sellerSMSG";
 			},
 			error : function(err){
 				console.log("err 발생 : " + err);
@@ -243,29 +199,29 @@ function productDel(idx){
 }
 
 //체크 되어 있는 값 추출
-//List 선택 상품 삭제
+//List 선택 메시지 삭제
 function dataListDelUp(){
 	var $chk_sub = $('input[name="ck_sub"]:checked');
 	if( 1 > $chk_sub.length ){//체크가 없다면 length는 0
-		alert('선택 된 상품이 없습니다.');
+		alert('선택 된 메시지가 없습니다.');
 		return;
  	}else{//체크가 있다면
 		if( confirm( '삭제 처리를 진행하시겠습니까?' ) ){
-	 		$chk_sub.each(function() {//반복문 돌려서 선택된 상품의 val()값 == 상품idx값을 DELETE로 보낸다.
+	 		$chk_sub.each(function() {//반복문 돌려서 선택된 상품의 val()값 == 메시지idx값을 PUT로 보낸다.
 	 			var test = $(this).val();
 	 			$.ajax({
-	 				url : " sellerPL/"+parseInt(test),
-	 				method : "DELETE",
+	 				url : "viewSMSG/"+parseInt(test),
+	 				method : "PUT",
 	 				success : function(data){
-	 					console.log("삭제완료");
+	 					console.log("삭제 완료.");
 	 				},
 	 				error : function(err){
 	 					console.log("err 발생 : " + err);
 	 				}
 	 			});
 	 		});//each반복문
-	 		alert("상품이 삭제되었습니다.");
-			location.href="/sellerPL";
+	 		alert("선택한 메시지가 삭제되었습니다.");
+			location.href="/sellerSMSG";
 		}else{
 			return;
 		}
@@ -274,34 +230,28 @@ function dataListDelUp(){
  
  //등록버튼 누르면 페이지 이동
 function dataAdd(){
-	location.href="/sellerPR";
+	location.href="/message";
 }
  
- //상품검색버튼 눌렀을 때
- //category, category2 , pcode, pname, origin, writedate
+ //검색버튼 눌렀을 때
 function dataSearch(){
 	 //input tag들 value="" 초기값 
-	var category = $("#category").val();
-	var category2 = $("#category2").val();
-	var pcode = $("#pcode").val();
-	var pname = $("#pname").val();
-	var origin = $("#origin").val();
+	var receive_id = $("#receive_id").val();
+	var title = $("#title").val();
 	var writedate = $("#writedate").val();
-	if(category == "" && category2 == "" && pcode == "" && pname == "" && origin == "" && writedate == ""){
+
+	if(receive_id == "" && title == "" && writedate == ""){
 		alert("검색할 내용을 입력해주세요.");
 		return;
 	}else{
 		$.ajax({
-			 url : " sellerPL/dataSearch/1", //--> /sellerPL/dataSearch/{page}
+			 url : "sellerSMSG/dataSearch/1", //--> /sellerSMSG/dataSearch/{page}
 			 dataType : "json",  //받는 type
 			 method : "POST",
 			 contentType : "application/json; charset=UTF-8",	//보내는 Type
 			 data : JSON.stringify({
-				 "category" :  category,
-				 "category2" : category2,
-				 "pcode" : pcode,
-				 "pname" : pname,
-				 "origin" : origin,
+				 "receive_id" :  receive_id,
+				 "title" : title,
 				 "writedate" : writedate
 			 }),
 			 success : function(result){
@@ -315,22 +265,35 @@ function dataSearch(){
 }
  
 //SearchPage 이동
-function goSearchPage(pge) {
+function goSearch(pge) {
+	var receive_id = $("#receive_id").val();
+	var title = $("#title").val();
+	var writedate = $("#writedate").val();
 	$("input[name=ck_main]").prop("checked", false);
 	page = pge;
+	//alert("sas");
 	$.ajax({
-		url : " sellerPL/dataSearch/"+ page,
-		dataType : "json",
-		method : "POST",
-		success : function(result) {
-			displySearch(result);
-		}
-	});
+		 url : "sellerSMSG/dataSearch/" + page, //--> /sellerSMSG/dataSearch/{page}
+		 dataType : "json",  //받는 type
+		 method : "POST",
+		 contentType : "application/json; charset=UTF-8",	//보내는 Type
+		 data : JSON.stringify({
+			 "receive_id" :  receive_id,
+			 "title" : title,
+			 "writedate" : writedate
+		 }),
+		 success : function(result){
+			 displySearch(result);
+		 },
+		 error : function(err){
+			 console.log("err 발생 : " + err);
+		 }
+	 });
 }
  
  //검색data List뿌려주기
  function displySearch(result){
-	 var totalCount = result.totalCount;
+		var totalCount = result.totalCount;
 		var startPage = result.startPage;
 		var endPage = result.endPage;
 		var totalPage = result.totalPage;
@@ -339,10 +302,9 @@ function goSearchPage(pge) {
 		var result = result.data;
 		var count = result.length;
 		$("#Pcount").text(totalCount);
-		$("#count").text(count);
 		var str = null;
 		if (count == 0) {
-			str +="<tr><td colspan='9' style='text-align:center'>등록된 상품이 없습니다.</td></tr>";
+			str +="<tr><td colspan='6' style='text-align:center'>메시지가 없습니다.</td></tr>";
 		} else if (count > 0) {
 			for (var i = 0; i < count; i++) {
 				var writedate = result[i].writedate.substr(0, 10);
@@ -350,24 +312,16 @@ function goSearchPage(pge) {
 				str += "<td>";
 	            str +="<input name='ck_sub' type='checkbox' value="+result[i].idx+">";
 	            str +="</td>";
-	            str +="<td>"+result[i].pcode+"</td>";
-	            str +="<td>"+result[i].pname+"</td>";
-	            str +="<td>";
-	            str +="    <img src='img/"+result[i].filename+"' width='45' height='55'/>";
-	            str +="</td>";
-	            str +="<td>"+result[i].category+"&nbsp;&gt;&nbsp;"+result[i].category2+"</td>";
-	            str +="<td class='text-right'>";
-	            str +=""+addComma(result[i].price)+"원";
-	            str +="</td>";
-	            str +="<td>"+result[i].sell_num+"</td>";
+	            str +="<td>"+result[i].status+"</td>";
+	            str +="<td>"+result[i].receive_id+"</td>";
+	            str +="<td>"+result[i].title+"</td>";
 	            str +="<td>"+writedate+"</td>";
-	            str +="<td>";			//    /sellerPD/{idx}
-	            str +="    <a href='sellerPD/"+result[i].idx+"'><button class='btn btn-info btn-xs'  type='button' title='보기'>보기</button></a>";
-	            str +="    <button class='btn btn-warning btn-xs'onclick='productUp("+result[i].idx+")' type='button' title='수정' >수정</button>";
-	            str +="    <button class='btn btn-danger btn-xs'  onclick='productDel("+result[i].idx+")' type='button' title='삭제' >삭제</button>";
+	            str +="<td>";			//    /viewSMSG/{idx}
+	            str +="    <a href='/viewSMSG/"+result[i].idx+"'><button class='btn btn-info btn-xs'  type='button' title='보기'>보기</button></a>";
+	            str +="    <button class='btn btn-danger btn-xs'  onclick='msgDel("+result[i].idx+")' type='button' title='삭제' >삭제</button>";
 	            str +="</td>";
 				str +="</tr>";
-				//<a href='detail/"+result[i].idx+"'> == localhost:8080 detail/4
+				//<a href='detail/"+result[i].idx+"'> == localhost:8080detail/4
 			}
 		}
 		$("#ListAll").html(str);
@@ -380,11 +334,11 @@ function goSearchPage(pge) {
 			pageStr = "<button type='button' class='btn btn-info btn-sm'>처음</button>&nbsp;&nbsp;&nbsp;";
 			pageStr += "<button type='button' class='btn btn-default btn-sm'>이전</button>&nbsp;&nbsp;";
 		} else if (page != 1) { // 현재페이지가 1이 아닐 때
-			pageStr = "<a href='javascript:goSearchPage(1)'><button type='button' class='btn btn-info btn-sm'>처음</button></a>&nbsp;&nbsp;&nbsp;";
+			pageStr = "<a href='javascript:goSearch(1)'><button type='button' class='btn btn-info btn-sm'>처음</button></a>&nbsp;&nbsp;&nbsp;";
 			if((startPage - pageSize) <= 0){
-				pageStr += "<a href='javascript:goSearchPage(" + 1 + ")'><button type='button' class='btn btn-default btn-sm'>이전</button></a>&nbsp;&nbsp;&nbsp;";
+				pageStr += "<a href='javascript:goSearch(" + 1 + ")'><button type='button' class='btn btn-default btn-sm'>이전</button></a>&nbsp;&nbsp;&nbsp;";
 			}else{
-				pageStr += "<a href='javascript:goSearchPage(" + (startPage - pageSize) 	+ ")'><button type='button' class='btn btn-default btn-sm'>이전</button></a>&nbsp;&nbsp;&nbsp;";
+				pageStr += "<a href='javascript:goSearch(" + (startPage - pageSize) 	+ ")'><button type='button' class='btn btn-default btn-sm'>이전</button></a>&nbsp;&nbsp;&nbsp;";
 			}
 		}
 		
@@ -394,14 +348,14 @@ function goSearchPage(pge) {
 				if (page == k) //현재 페이지
 					pageStr += "<button class='btn btn-default btn-sm active' type='button'>"+k+"</button>&nbsp;&nbsp;&nbsp;";
 				else  //현재페이지가 아닌
-					pageStr += "<a href='javascript:goSearchPage(" + k + ")'><button class='btn btn-default btn-sm' type='button'>" + k + "</button></a>&nbsp;&nbsp;&nbsp;";
+					pageStr += "<a href='javascript:goSearch(" + k + ")'><button class='btn btn-default btn-sm' type='button'>" + k + "</button></a>&nbsp;&nbsp;&nbsp;";
 			}
 		}else{
 			for (var k = startPage; k <= endPage; k++) {
 				if (page == k) //현재 페이지
 					pageStr += "<button class='btn btn-default btn-sm active' type='button'>"+k+"</button>&nbsp;&nbsp;&nbsp;";
 				else  //현재페이지가 아닌
-					pageStr += "<a href='javascript:goSearchPage(" + k + ")'><button class='btn btn-default btn-sm' type='button'>" + k + "</button></a>&nbsp;&nbsp;&nbsp;";
+					pageStr += "<a href='javascript:goSearch(" + k + ")'><button class='btn btn-default btn-sm' type='button'>" + k + "</button></a>&nbsp;&nbsp;&nbsp;";
 			}
 		}
 		
@@ -410,32 +364,30 @@ function goSearchPage(pge) {
 			pageStr += "<button type='button' class='btn btn-default btn-sm'>다음</button>&nbsp;&nbsp;&nbsp;";
 			pageStr += "<button type='button'  class='btn btn-info btn-sm'>끝</button>";
 		} else if (page != totalPage) {
-			pageStr += "<a href='javascript:goSearchPage(" + (startPage + pageSize) + ")'><button type='button' class='btn btn-default btn-sm'>다음</button></a>&nbsp;&nbsp;&nbsp;";
-			pageStr += "<a href='javascript:goSearchPage(" + totalPage + ")'><button type='button'  class='btn btn-info btn-sm'>끝</button></a>";
+			pageStr += "<a href='javascript:goSearch(" + (startPage + pageSize) + ")'><button type='button' class='btn btn-default btn-sm'>다음</button></a>&nbsp;&nbsp;&nbsp;";
+			pageStr += "<a href='javascript:goSearch(" + totalPage + ")'><button type='button'  class='btn btn-info btn-sm'>끝</button></a>";
 		}
 		$("#paging").html(pageStr);
 	}//displySearch()
  
 	 //전체목록 버튼
 	 function returnList(){
-		$("#category").val("");
-		$("#category2").val("");
-		$("#pcode").val("");
-		$("#pname").val("");
-		$("#origin").val("");
-		$("#writedate").val("");//input값 초기화
-		 $.ajax({
-				url :  "sellerPL/1", //controller --> /sellerPL/{page}
-				dataType : "json",
-				method : "POST",
-				success : function(result){
-					display(result);
-				},
-				error : function(err){
-					console.log("err : " +err);
-				}
-			});//ajax
+		$("#receive_id").val("");
+		$("#title").val("");
+		$("#wirtedate").val("");//input값 초기화
+		$.ajax({
+			url :  "sellerSMSG/1", //controller --> /sellerSMSG/{page}
+			dataType : "json",
+			method : "POST",
+			success : function(result){
+				display(result);
+			},
+			error : function(err){
+				console.log("err : " +err);
+			}
+		});//ajax
 	 }//returnList()
+	 
 </script>
 </head>
 <body>
@@ -479,54 +431,33 @@ function goSearchPage(pge) {
 							<div class="col-md-12 col-sm-12 col-xs-12" style="padding-left: 30px;">
 								<div class="x_panel">
 									<div class="x_title">
-										<h1 style="padding-top: 20px;">상품관리</h1>
+										<h1 style="padding-top: 20px;">보낸 메시지</h1>
 										<hr>
 										<br>
-               						 <h3>상품 검색</h3>
+               						 <h3>메시지 검색</h3>
 									</div>
 									<hr>
 									<div class="x_content">
 										<div class="form-group">
-											<label class="col-sm-2 col-xs-12 control-label" for="pr_prcseq" style=" text-align: right;">상품카테고리</label>
-											<div class="col-sm-10 col-xs-12">
-												<div class="row">
-													<div class="col-sm-3 col-xs-12">
-														<select class="form-control" id="category" name="category">
-															<option value="">선택</option>
-																<option value="농산물">농산물</option>
-																<option value="수산물">수산물</option>
-																<option value="가공식품" >가공식품</option>
-														</select>
-													</div>
-													<div class="col-sm-3 col-xs-12">
-														<select class="form-control" id="category2" name="category2">
-															<option value="">선택</option>
-														</select>
-													</div>
-												</div>
-											</div>
-										</div>
-										<br><br>
-										<div class="form-group">
-											<label class="col-sm-2 col-xs-12 control-label" for="s_like_pr_code" style=" text-align: right;">상품코드</label>
+											<label class="col-sm-2 col-xs-12 control-label" for="s_like_pr_code" style=" text-align: right;">받는 사람</label>
 											<div class="col-sm-4 col-xs-12">
-												<input class="form-control" id="pcode" name="pcode" placeholder="상품코드" type="text" value="" />
+												<input class="form-control" id="receive_id" name="receive_id" placeholder="받는 사람" type="text" value="" />
 											</div>
-											<label class="col-sm-2 col-xs-12 control-label" for="s_like_pr_name" style=" text-align: right;">상품명</label>
+											<label class="col-sm-2 col-xs-12 control-label" for="s_like_pr_name" style=" text-align: right;">제목</label>
 											<div class="col-sm-4 col-xs-12">
-												<input class="form-control" id="pname" name="pname" placeholder="상품명" type="text" value="" />
+												<input class="form-control" id="title" name="title" placeholder="제목" type="text" value="" />
 											</div>											
 										</div>
 										<br><br>
 										<div class="form-group">
-											<label class="col-sm-2 col-xs-12 control-label" for="s_like_pr_origin" style=" text-align: right;">원산지</label>
-											<div class="col-sm-4 col-xs-12">
-												<input class="form-control" id="origin" name="origin" placeholder="원산지" type="text" value="" />
-											</div>
 											<label class="col-sm-2 col-xs-12 control-label" for="pr_writedate" style=" text-align: right;">등록일</label>
 											<div class="col-sm-4 col-xs-12">
 												<input class="form-control" id="writedate" name="writedate" placeholder="yyyy-mm-dd" type="text" value="" />
 											</div>	
+<!-- 											<label class="col-sm-2 col-xs-12 control-label" for="pr_writedate" style=" text-align: right;">등록일</label> -->
+<!-- 											<div class="col-sm-4 col-xs-12"> -->
+<!-- 												<input class="form-control" id="writedate" name="writedate" placeholder="yyyy-mm-dd" type="text" value="" /> -->
+<!-- 											</div>	 -->
 										</div>
 										<br><br>
 										
@@ -548,11 +479,10 @@ function goSearchPage(pge) {
     <div class="col-md-12 col-sm-12 col-xs-12" style="padding-left: 30px;">
         <div class="x_panel">
             <div class="x_title">
-                <h3>상품 리스트</h3>
+                <h3>메시지 리스트</h3>
                 <hr>
                 <ul class="nav navbar-right panel_toolbox">
                     <li>[ Total  <span id="Pcount"></span> Rows ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-                    <li>[ 게시글 수  <span id="count"></span> ]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
                 </ul>
                 <div class="clearfix"></div>
             </div>
@@ -565,13 +495,10 @@ function goSearchPage(pge) {
                                 <th>
                                     <input id="ck_main" name="ck_main" type="checkbox" />
                                 </th>
-                                <th>상품코드</th>
-                                <th>상품명</th>
-                                <th>상품이미지</th>
-                                <th>카테고리</th>
-                                <th>판매가</th>
-                                <th>판매수</th>
-                                <th>등록일</th>
+                                <th>상태</th>
+                                <th>받는사람</th>
+                                <th>제목</th>
+                                <th>보낸날짜</th>
                                 <th>관리</th>
                             </tr>
                         </thead>
@@ -586,8 +513,8 @@ function goSearchPage(pge) {
 						<hr>
 						</div>
                     <div class="col-md-8 col-sm-12">
-                    <button class="btn btn-info btn-sm" onclick="dataAdd()" type="button" title="상품등록">
-						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>등록</button>
+                    <button class="btn btn-info btn-sm" onclick="dataAdd()" type="button" title="메시지쓰기">
+						<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>쓰기</button>
  					<button class="btn btn-danger btn-sm" onclick="dataListDelUp()" type="button" title="선택삭제">
 						<span class="glyphicon glyphicon-check" aria-hidden="true"></span>삭제</button>
                     </div>

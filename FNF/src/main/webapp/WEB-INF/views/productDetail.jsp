@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
    HttpSession Session = request.getSession(true);
-   String user_id = "joohh11";//String sellerid = request.getParameter("id");// id=넘어오는 name값
+   String user_id = "5555";//String sellerid = request.getParameter("id");// id=넘어오는 name값
    Session.setAttribute("user_id", user_id); //test를 user_id세션에 저장
    //${sessionScope.user_id}
 
@@ -61,7 +61,7 @@ $(document).ready(function() {
 		//문의 달기
 		if('' != $in_contents.val() && 400 > $in_contents.val().length){
 			$.ajax({
-				url : "/fnf/inquiry",
+				url : "/inquiry",
 				method : "POST",
 				dataType :"json" ,
 				contentType : "application/json; charset=utf-8",  //json방식 POST 하려면 필요.
@@ -79,11 +79,18 @@ $(document).ready(function() {
 			})
 		}
 	});
+	
+	var contents = "${product.pcontents}";
+	contents = contents.replace(/\'\'/gi, "'"); 
+	contents = contents.replace(/\&lt\;/gi, "<");
+	contents = contents.replace(/\&gt\;/gi, ">");
+	contents = contents.replace(/\<br\>/gi, "\r\n");
+	$("#pcontents").html(contents);
 });//function()
 	
 function inquiryView(){ //댓글 모두 보기
 								// url , data , function()
-		$.getJSON("/fnf/inquiry/all/"+"${product.pcode}",function(data){
+		$.getJSON("/inquiry/all/"+"${product.pcode}",function(data){
 		//console.log(data);
 		var data = data.data;
 		var cnt = data.length;
@@ -107,7 +114,7 @@ function inquiryView(){ //댓글 모두 보기
 		
 	//문의 삭제
 	$("#inquiryList").on("click",".inquiryLi .media .media-body button", function(){
-		//alert($(this).prev().prev().text());
+		//alert($(this).prev().prev().text()); //문의 작성자text추출
 		if($(this).prev().prev().text() != "<%=inquiry_user_id%>"){
 			alert("삭제할 수 없는 글입니다.");
 			return;
@@ -115,7 +122,7 @@ function inquiryView(){ //댓글 모두 보기
 			var idx = $(this).parent().parent().parent().attr("id");//a  부모 = div , 부모 = div , 부모 = li 의 속성id값
 			//console.log(id);
 			$.ajax({
-				url : "/fnf/inquiry/"+parseInt(idx),
+				url : " /inquiry/"+parseInt(idx),
 				dataType: "json", 	//오는 data
 				method : "DELETE",
 				success : function(data){
@@ -237,7 +244,7 @@ function inquiryView(){ //댓글 모두 보기
 											<div class="col-sm-12 col-xs-12">
 			                                	<a class="aa-add-to-cart-btn" href="javascript:basketIn('D');" title="바로구매">바로구매</a>
 			                                	<a class="aa-add-to-cart-btn" href="javascript:basketIn('N');" title="장바구니">장바구니</a> 
-												<a class="aa-add-to-cart-btn" href="javascript:wishIn();" title="관심상품">관심상품</a>
+												<a class="aa-add-to-cart-btn" href="/message/${product.idx}" title="판매자에게">메시지보내기</a>
 			                                </div>
 			                                <div class="col-sm-12 col-xs-12">
 			                                </div>
@@ -254,7 +261,7 @@ function inquiryView(){ //댓글 모두 보기
 								<!-- Tab panes -->
 								<div class="tab-content">
 									<div class="tab-pane fade in active" id="description" style="word-break:break-all;overflow: auto">
-										<p>${product.pcontents}</p>
+										<p id="pcontents"></p>
 									</div>
 									<div class="tab-pane fade" id="review">
 										<div class="aa-product-review-area">

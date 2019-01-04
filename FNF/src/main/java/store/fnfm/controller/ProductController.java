@@ -38,7 +38,8 @@ public class ProductController {
 	public String sellerPR() {
 		return "productRegister";//views-->.jsp
 	}
-
+	
+	
 	//selectOne-update-page      /fnf/sellerPU/3
 	@RequestMapping(value="/sellerPU/{idx}",method=RequestMethod.GET)
 	@ResponseBody					//나갈 때 object --> json
@@ -161,7 +162,7 @@ public class ProductController {
 	      pcontents = pcontents.replaceAll("<","&lt;");
 	      pcontents = pcontents.replaceAll(">","&gt;");
 	      pcontents = pcontents.replaceAll("'","''");
-	      pcontents = pcontents.replaceAll("\r\n", "<br/>");//Enter
+	      pcontents = pcontents.replaceAll("(\r\n|\r|\n|\n\r)", "<br>");//Enter
 		
 	    productVO.setSellerid(sellerid);
 	    productVO.setPcode(pcode);

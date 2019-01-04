@@ -164,4 +164,14 @@ Date writedate
 	</select>
 <!-- ================================================================================ -->
 
+<!-- ========================================selectAll======================================== -->
+	<parameterMap type="ProductVO" id="MSGselectIDMap">
+		<parameter property="idx" javaType="Integer" jdbcType="INTEGER" mode="IN" />
+		<parameter property="result" javaType="ResultSet" jdbcType="CURSOR" mode="OUT" resultMap="ProductResultMap"/>
+	</parameterMap>
+	<select id="MSGselectSellerID" parameterMap="MSGselectIDMap" parameterType="hashMap" statementType="CALLABLE">
+	{ call MESSAGE_SEND_SELECT_SELLER(?,?)}
+	</select>
+<!-- ================================================================================ -->
+
 </mapper>

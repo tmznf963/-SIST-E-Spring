@@ -32,6 +32,8 @@
 		<!--  <value>classpath:Cart.xml</value> -->
   				<value>classpath:product-mapper.xml</value>
   				<value>classpath:inquiry-mapper.xml</value>
+  				<value>classpath:message-mapper.xml</value>
+  				<value>classpath:orders-mapper.xml</value>
   			</list>
   		</property>
 	</bean>

@@ -267,3 +267,289 @@ BEGIN
 	) AND sellerid = p_sellerid
   ORDER BY idx DESC;
 END;
+
+//msg insert
+CREATE OR REPLACE PROCEDURE message_insert
+(
+	p_SEND_ID			IN			message.SEND_ID%TYPE,
+	p_RECEIVE_ID		IN			message.RECEIVE_ID%TYPE,
+  p_title		IN			message.title%TYPE,
+  p_contents		IN			message.contents%TYPE
+
+)
+IS
+BEGIN
+	INSERT INTO message(idx,SEND_ID,RECEIVE_ID,title,contents)
+	VALUES (message_idx_seq.NEXTVAL, p_SEND_ID, p_RECEIVE_ID, p_title, p_contents);
+	COMMIT;
+END;
+
+--보낸message(삭제안된) 전체 select
+CREATE OR REPLACE procedure message_send_selectAll
+(
+	m_send_id					IN		message.send_id%TYPE,
+  message_record 			OUT		 SYS_REFCURSOR,
+  v_start             IN          NUMBER,
+	v_end               IN          NUMBER
+)
+AS
+BEGIN
+   OPEN message_record FOR
+   SELECT B.idx, send_id, receive_id, title, contents, writedate, status
+   FROM
+   	(SELECT rownum AS rnum, A.idx, A.send_id, A.receive_id, A.title, A.contents, A.writedate, A.status
+   FROM
+		(SELECT idx, send_id, receive_id, title, contents, writedate, status, del_status
+			FROM message ORDER BY writedate DESC) A
+			WHERE rownum <= v_end AND send_id = m_send_id AND del_status = 0) B
+   WHERE B.rnum >= v_start;
+END;
+
+--보낸message(삭제안된) 갯수
+CREATE OR REPLACE PROCEDURE message_send_total_count
+(
+	m_send_id IN		message.send_id%TYPE,
+  v_count OUT Number
+)
+IS
+BEGIN
+	SELECT COUNT(*) INTO v_count
+  FROM message
+  WHERE send_id = m_send_id AND DEL_STATUS = 0;
+END;
+
+--검색된 보낸메시지 selectAll
+CREATE OR REPLACE procedure message_send_search
+(
+	m_send_id					IN		message.send_id%TYPE,
+  m_receive_id					IN		message.receive_id%TYPE,
+  m_title					IN		message.title%TYPE,
+  m_writedate				IN		VARCHAR2,
+  message_record 			OUT		 SYS_REFCURSOR,
+  v_start             IN          NUMBER,
+	v_end               IN          NUMBER
+)
+AS
+BEGIN
+   OPEN message_record FOR
+   SELECT B.idx, send_id, receive_id, title, contents, writedate, status
+   FROM
+   	(SELECT rownum AS rnum, A.idx, A.send_id, A.receive_id, A.title, A.contents, A.writedate, A.status
+   FROM
+		(SELECT idx, send_id, receive_id, title, contents, writedate, status, del_status
+			FROM message ORDER BY writedate DESC) A
+			WHERE rownum <= v_end
+      AND
+      send_id = m_send_id
+      AND
+      del_status = 0
+      AND
+      (
+			receive_id LIKE CONCAT('%',(CONCAT(m_receive_id,'%')))
+			AND title LIKE CONCAT('%',(CONCAT(m_title,'%')))
+			AND TO_CHAR(writedate, 'yyyy-mm-dd') LIKE CONCAT('%',(CONCAT(m_writedate,'%')))
+      )
+      ) B
+   WHERE B.rnum >= v_start;
+END;
+
+--검색된 보낸메시지 conut
+CREATE OR REPLACE PROCEDURE message_send_total_count
+(
+	m_send_id IN		message.send_id%TYPE,
+ 	 v_count OUT Number
+)
+IS
+BEGIN
+	SELECT COUNT(*) INTO v_count
+  FROM message
+  WHERE send_id = m_send_id AND DEL_STATUS = 0;
+END;
+
+
+CREATE OR REPLACE PROCEDURE MESSAGE_SELECT_ONE
+(
+	m_idx 					IN			message.idx%TYPE,
+	message_record			OUT		SYS_REFCURSOR
+)
+AS
+BEGIN
+	OPEN message_record FOR
+	SELECT * FROM message
+	WHERE idx = m_idx;
+END;
+
+CREATE OR REPLACE PROCEDURE MESSAGE_SEND_DELETE
+(
+	m_idx 	IN 		message.idx%TYPE
+)
+IS
+BEGIN
+	UPDATE message
+  SET del_status = 1
+  WHERE idx = m_idx;
+  COMMIT;
+END;
+
+
+-- 받은 메시지 삭제
+CREATE OR REPLACE PROCEDURE MESSAGE_receive_DELETE
+(
+	m_idx 	IN 		message.idx%TYPE
+)
+IS
+BEGIN
+	UPDATE message
+  SET del_status2 = 1
+  WHERE idx = m_idx;
+  COMMIT;
+END;
+
+--받은 메시지 검색 select
+CREATE OR REPLACE procedure MESSAGE_receive_SEARCH
+(
+	m_send_id					IN		message.send_id%TYPE,
+  m_receive_id					IN		message.receive_id%TYPE,
+  m_title					IN		message.title%TYPE,
+  m_writedate				IN		VARCHAR2,
+  message_record 			OUT		 SYS_REFCURSOR,
+  v_start             IN          NUMBER,
+	v_end               IN          NUMBER
+)
+AS
+BEGIN
+   OPEN message_record FOR
+   SELECT B.idx, send_id, receive_id, title, contents, writedate, status
+   FROM
+   	(SELECT rownum AS rnum, A.idx, A.send_id, A.receive_id, A.title, A.contents, A.writedate, A.status
+   FROM
+		(SELECT idx, send_id, receive_id, title, contents, writedate, status, del_status2
+			FROM message ORDER BY writedate DESC) A
+			WHERE rownum <= v_end
+      AND
+      receive_id = m_receive_id
+      AND
+      del_status2 = 0
+      AND
+      (
+			send_id LIKE CONCAT('%',(CONCAT(m_send_id,'%')))
+			AND title LIKE CONCAT('%',(CONCAT(m_title,'%')))
+			AND TO_CHAR(writedate, 'yyyy-mm-dd') LIKE CONCAT('%',(CONCAT(m_writedate,'%')))
+      )
+      ) B
+   WHERE B.rnum >= v_start;
+END;
+
+--받은 메시지 검색 카운트
+CREATE OR REPLACE PROCEDURE MESSAGE_receive_SEARCH_TOTAL_COUNT
+(
+	m_send_id					IN		message.send_id%TYPE,
+  m_receive_id					IN		message.receive_id%TYPE,
+  m_title					IN		message.title%TYPE,
+  m_writedate				IN		VARCHAR2,
+  v_count OUT Number
+)
+IS
+BEGIN
+	SELECT COUNT(*) INTO v_count
+  FROM message
+  WHERE receive_id = m_receive_id AND DEL_STATUS2 = 0
+  AND
+ (
+		send_id LIKE CONCAT('%',(CONCAT(m_send_id,'%')))
+		AND title LIKE CONCAT('%',(CONCAT(m_title,'%')))
+		AND TO_CHAR(writedate, 'yyyy-mm-dd') LIKE CONCAT('%',(CONCAT(m_writedate,'%')))
+  )ORDER BY writedate DESC;
+END;
+
+--받은메시지함 select
+CREATE OR REPLACE procedure MESSAGE_receive_SELECTALL
+(
+	m_receive_id					IN		message.receive_id%TYPE,
+  message_record 			OUT		 SYS_REFCURSOR,
+  v_start             IN          NUMBER,
+	v_end               IN          NUMBER
+)
+AS
+BEGIN
+   OPEN message_record FOR
+   SELECT B.idx, send_id, receive_id, title, contents, writedate, status
+   FROM
+   	(SELECT rownum AS rnum, A.idx, A.send_id, A.receive_id, A.title, A.contents, A.writedate, A.status
+   FROM
+		(SELECT idx, send_id, receive_id, title, contents, writedate, status, del_status2
+			FROM message ORDER BY writedate DESC) A
+			WHERE rownum <= v_end AND receive_id = m_receive_id AND del_status2 = 0) B
+   WHERE B.rnum >= v_start;
+END;
+
+--받은 메세지함 카운트
+CREATE OR REPLACE PROCEDURE MESSAGE_receive_TOTAL_COUNT
+(
+	m_receive_id IN		message.receive_id%TYPE,
+  v_count OUT Number
+)
+IS
+BEGIN
+	SELECT COUNT(*) INTO v_count
+  FROM message
+  WHERE receive_id = m_receive_id AND DEL_STATUS2 = 0;
+END;
+
+--읽지않음을 읽음으로
+CREATE OR REPLACE PROCEDURE MESSAGE_RECEIVE_READ
+(
+	m_idx 	IN 		message.idx%TYPE
+)
+IS
+BEGIN
+	UPDATE message
+  SET status = '읽음'
+  WHERE idx = m_idx;
+  COMMIT;
+END;
+
+--주문 selectAll
+CREATE OR REPLACE procedure orders_seller_selectall
+(
+	p_sellerid					IN		product.sellerid%TYPE,
+  product_record 			OUT		 SYS_REFCURSOR,
+  v_start             IN          NUMBER,
+	v_end               IN          NUMBER
+)
+AS
+BEGIN
+   OPEN product_record FOR
+   SELECT B.USER_NAME,B.order_idx,B.idx,B.pname,B.USER_ID,B.DEL_PRICE,B.TOTALPRICE,B.RECEIVER_NAME,B.del_name,B.DEL_CODE,B.PAY,B.STATUS,B.PAY_DATE
+FROM
+   	(SELECT rownum AS rnum,A.USER_NAME,A.order_idx,A.idx,A.pname,A.USER_ID,A.DEL_PRICE,A.TOTALPRICE,A.RECEIVER_NAME,A.del_name,A.DEL_CODE,A.PAY,A.STATUS,A.PAY_DATE
+   	 FROM
+				(
+        	SELECT c.USER_NAME,o.order_idx,s.idx,p.pname, s.USER_ID,s.DEL_PRICE,s.TOTALPRICE,s.RECEIVER_NAME,s.del_name,s.DEL_CODE,s.PAY,s.STATUS,s.PAY_DATE,p.sellerid
+					FROM
+						(((ORDER_detial o
+						INNER JOIN product p ON o.pcode = p.pcode)
+						INNER JOIN orders s ON o.idx = s.idx)
+						INNER JOIN CUSTOMER c ON o.user_id = c.user_id)
+          WHERE p.SELLERID=p_sellerid
+					ORDER BY o.order_idx DESC
+          ) A
+		 WHERE rownum <= v_end)B
+WHERE B.rnum >= v_start;
+END;
+
+--주문 count
+CREATE OR REPLACE PROCEDURE orders_seller_total_count
+(
+	v_sellerid IN		product.sellerid%TYPE,
+  v_count OUT Number
+)
+IS
+BEGIN
+	SELECT COUNT(*) INTO v_count
+	FROM (((ORDER_detial o
+	INNER JOIN product p ON o.pcode = p.pcode)
+	INNER JOIN orders s ON o.idx = s.idx)
+	INNER JOIN CUSTOMER c ON o.user_id = c.user_id)
+	WHERE p.sellerid = v_sellerid;
+END;

@@ -30,8 +30,29 @@
 	<mvc:resources mapping="/sellerPU/css/**" location="/static/css/" />
 	<mvc:resources mapping="/sellerPU/img/**" location="/static/img/" />
 	<mvc:resources mapping="/sellerPU/js/**" location="/static/js/" />
+	<mvc:resources mapping="/viewSMSG/static/**" location="/static/" />
+	<mvc:resources mapping="/viewSMSG/css/**" location="/static/css/" />
+	<mvc:resources mapping="/viewSMSG/img/**" location="/static/img/" />
+	<mvc:resources mapping="/viewSMSG/js/**" location="/static/js/" />
+	<mvc:resources mapping="/viewRMSG/static/**" location="/static/" />
+	<mvc:resources mapping="/viewRMSG/css/**" location="/static/css/" />
+	<mvc:resources mapping="/viewRMSG/img/**" location="/static/img/" />
+	<mvc:resources mapping="/viewRMSG/js/**" location="/static/js/" />
+	<mvc:resources mapping="/remessage/static/**" location="/static/" />
+	<mvc:resources mapping="/remessage/css/**" location="/static/css/" />
+	<mvc:resources mapping="/remessage/img/**" location="/static/img/" />
+	<mvc:resources mapping="/remessage/js/**" location="/static/js/" />
+	<mvc:resources mapping="/message/static/**" location="/static/" />
+	<mvc:resources mapping="/message/css/**" location="/static/css/" />
+	<mvc:resources mapping="/message/img/**" location="/static/img/" />
+	<mvc:resources mapping="/message/js/**" location="/static/js/" />
+	<mvc:resources mapping="/sellerOD/static/**" location="/static/" />
+	<mvc:resources mapping="/sellerOD/css/**" location="/static/css/" />
+	<mvc:resources mapping="/sellerOD/img/**" location="/static/img/" />
+	<mvc:resources mapping="/sellerOD/js/**" location="/static/js/" />
 	<!--  location : 물리적 경로 || mapping : 논리적 경로 -->
 	<!-- 8080/fnf/sellerPD/js/nouislider.js  -->
+	<!-- viewSMSG -->
 	
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

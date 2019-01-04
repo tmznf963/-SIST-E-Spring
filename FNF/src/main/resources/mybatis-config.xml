@@ -7,6 +7,8 @@
 <!-- 		<typeAlias type="store.fnfm.vo.CartVO" alias="cartVo" /> -->
 		<typeAlias type="store.fnfm.vo.ProductVO" alias="ProductVO" />
 		<typeAlias type="store.fnfm.vo.InquiryVO" alias="InquiryVO" />
+		<typeAlias type="store.fnfm.vo.MessageVO" alias="MessageVO" />
+		<typeAlias type="store.fnfm.vo.OrdersVO" alias="OrdersVO" />
 	</typeAliases>
 </configuration>
 

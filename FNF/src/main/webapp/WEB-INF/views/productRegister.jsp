@@ -29,12 +29,18 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
     <link href="css/sidebar.css" rel="stylesheet">
     <link href="css/style2.css" rel="stylesheet">
+      <style>
+		.sidebar-nav li a:hover {
+		    color: white;
+		    background: #9DC518;
+		  }
+</style>
     <script src="js/jquery.min.js"></script> 
     <script>
     $(function(){
 		//목록으로 
     	$("#btnList").bind("click",function(){
-			 location.href="/fnf/sellerPL"; // fnf/sellerPL
+			 location.href="/sellerPL"; // fnf/sellerPL
 		 });
 		 
 		//img 파일이 아닐 때
@@ -89,7 +95,7 @@
 	            async: true,
 	            type : 'POST',
 	            data : pcode,
-	            url : "pcodecheck",
+	            url : "/pcodecheck",
 	            dataType : "json",
 	            contentType: "application/json; charset=UTF-8",
 	            success : function(data) {
@@ -136,18 +142,23 @@
 				<li><img src="img/user.png" id="us"
 					class="img-reponsive img-circle" width="100px" height="100px">
 				</li>
-				<li><a href="#">[상품관리]</a></li>
-				<li><a href="productList.jsp">상품리스트[수정:삭제]</a></li>
-				<li><a href="productInsert.jsp">상품등록</a></li>
-				<li><a href="#"><hr></a></li>
-				<li><a href="#">[주문관리]</a></li>
-				<li><a href="orderList.html">전체주문관리</a></li>
-				<li><a href="#"><hr></a></li>
-				<li><a href="#">[취소|교환|반품|환불]</a></li>
-				<li><a href="orderCancel.html">취소내역</a></li>
-				<li><a href="orderSwap.html">교환내역</a></li>
-				<li><a href="orderReturn.html">반품내역</a></li>
-				<li><a href="orderRefund.html">환불내역</a></li>
+				<li><hr></li>
+				<li>[상품관리]</li>
+				<li><a href="sellerPL">상품리스트</a></li>
+				<li><a href="sellerPR">상품등록</a></li>
+				<li><hr></li>
+				<li>[주문관리]</li>
+				<li><a href="#">전체주문관리</a></li>
+				<li><hr></li>
+				<li>[취소|교환|반품|환불]</li>
+				<li><a href="#">취소내역</a></li>
+				<li><a href="#">교환내역</a></li>
+				<li><a href="#">반품내역</a></li>
+				<li><a href="#">환불내역</a></li>
+				<li><hr></li>
+				<li>[메시지]</li>
+				<li><a href="sellerRMSG">받은메시지</a></li>
+				<li><a href="sellerSMSG">보낸메시지</a></li>
 			</ul>
 		</div>
 
@@ -156,7 +167,7 @@
 		<h1>상품 관리</h1>
 			<h3>상품등록</h3>
 			<hr>
-			<form id="frm" action="sellerPR" method="post" enctype="multipart/form-data" onsubmit="return false;">
+			<form id="frm" action="/sellerPR" method="post" enctype="multipart/form-data" onsubmit="return false;">
 <!-- 			<form action="sellerPR" method="post" > -->
 				<ul style="list-style-type: none; margin: 10px 0px">
 				<div class="input-group">
