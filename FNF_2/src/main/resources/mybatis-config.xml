@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+<!-- 		<typeAlias type="store.fnfm.vo.CartVO" alias="cartVo" /> -->
+<!-- SellerChartVO -->
+		<typeAlias type="store.fnfm.vo.SellerProductVO" alias="SellerProductVO" />
+		<typeAlias type="store.fnfm.vo.SellerChartVO" alias="SellerChartVO" />
+		<typeAlias type="store.fnfm.vo.InquiryVO" alias="InquiryVO" />
+		<typeAlias type="store.fnfm.vo.MessageVO" alias="MessageVO" />
+		<typeAlias type="store.fnfm.vo.OrdersVO" alias="OrdersVO" />
+	</typeAliases>
+</configuration>
+
+
